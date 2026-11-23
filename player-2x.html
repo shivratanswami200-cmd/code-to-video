@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GURU GYANORA — Exact 1x True MP4 Studio</title>
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+  body {
+    background: #0d1117; color: #e6edf3; height: 100vh;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .topbar {
+    height: 58px; background: #161b22; border-bottom: 1px solid #30363d;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px; gap: 10px; flex-shrink: 0;
+  }
+  .brand { font-weight: 700; font-size: 15px; color: #f0b90b; }
+  .badge {
+    background: #238636; color: #fff; font-size: 11px; padding: 2px 7px;
+    border-radius: 4px; margin-left: 6px;
+  }
+  .controls { display: flex; align-items: center; gap: 10px; }
+  .input-group {
+    display: flex; align-items: center; gap: 6px; background: #0d1117;
+    border: 1px solid #30363d; padding: 5px 10px; border-radius: 6px; font-size: 13px;
+  }
+  .input-group input {
+    width: 60px; background: transparent; border: none; color: #58a6ff;
+    font-weight: 700; font-size: 14px; text-align: center; outline: none;
+  }
+  button {
+    border: none; border-radius: 6px; padding: 8px 14px; font-weight: 600;
+    font-size: 13px; cursor: pointer; transition: 0.2s;
+  }
+  .btn-preview { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
+  .btn-preview:hover { background: #30363d; }
+  .btn-export {
+    background: linear-gradient(135deg, #d32f2f, #9a0007);
+    color: #fff; border: 1px solid #ffca28; box-shadow: 0 0 12px rgba(211,47,47,0.4);
+  }
+  .btn-export:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .workspace { display: flex; flex: 1; overflow: hidden; }
+  .editor-pane {
+    width: 34%; min-width: 250px; background: #0d1117;
+    border-right: 1px solid #30363d; display: flex; flex-direction: column;
+  }
+  .pane-header {
+    padding: 8px 14px; background: #161b22; font-size: 12px;
+    color: #8b949e; border-bottom: 1px solid #30363d;
+    display: flex; justify-content: space-between;
+  }
+  textarea {
+    flex: 1; width: 100%; background: #0d1117; color: #7ee787;
+    border: none; padding: 14px; font-family: 'Consolas', monospace;
+    font-size: 12.5px; resize: none; outline: none; line-height: 1.5;
+  }
+
+  .preview-pane {
+    flex: 1; background: #010409; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; position: relative; padding: 16px;
+  }
+  .stage-wrapper {
+    width: 100%; max-width: 960px; aspect-ratio: 16 / 9;
+    background: #000; border: 2px solid #30363d; border-radius: 8px;
+    overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  }
+  #renderFrame {
+    width: 1920px; height: 1080px; border: none;
+    transform-origin: top left; background: #000;
+    position: absolute; top: 0; left: 0;
+  }
+
+  .status-bar {
+    height: 38px; background: #161b22; border-top: 1px solid #30363d;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px; font-size: 13px; color: #8b949e;
+  }
+  .status-highlight { color: #f0b90b; font-weight: 600; }
+  .progress-track {
+    width: 240px; height: 8px; background: #21262d; border-radius: 4px; overflow: hidden;
+  }
+  .progress-fill {
+    width: 0%; height: 100%; background: linear-gradient(90deg, #f0b90b, #2ea043);
+    transition: width 0.2s linear;
+  }
+
+  /* रिकॉर्डिंग मोड: माउस गायब, टैब गायब, पूरा 16:9 फ्रेम और टाइमलाइन सामने */
+  body.recording-mode, body.recording-mode * { cursor: none !important; }
+  body.recording-mode .topbar,
+  body.recording-mode .editor-pane,
+  body.recording-mode .status-bar { display: none !important; }
+  body.recording-mode .preview-pane { padding: 0 !important; background: #000 !important; }
+  body.recording-mode .stage-wrapper {
+    position: fixed !important; top: 0 !important; left: 0 !important;
+    width: 100vw !important; height: 100vh !important; max-width: none !important;
+    border: none !important; border-radius: 0 !important; z-index: 99999 !important;
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">🎬 GURU GYANORA <span class="badge">TRUE MP4 • 1x EXACT SPEED</span></div>
+    <div class="controls">
+      <div class="input-group">
+        <span>⏱️ समय (Sec):</span>
+        <input type="number" id="durationInput" value="10" min="3" max="600">
+      </div>
+      <button class="btn-preview" onclick="loadPreview(false)">▶ प्रिव्यू</button>
+      <button class="btn-export" id="exportBtn" onclick="startTrueMP4Export()">🔴 Export True MP4</button>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <div class="editor-pane">
+      <div class="pane-header">
+        <span>📝 अपना HTML कोड यहाँ पेस्ट करें</span>
+        <span style="color:#58a6ff; cursor:pointer;" onclick="document.getElementById('htmlCode').value=''">साफ़ करें</span>
+      </div>
+      <textarea id="htmlCode" placeholder="यहाँ अपना पूरा <!DOCTYPE html> ... </html> कोड पेस्ट करें..."></textarea>
+    </div>
+
+    <div class="preview-pane">
+      <div class="stage-wrapper" id="stageWrapper">
+        <iframe id="renderFrame"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div id="statusText">तैयार है — पहले 10 सेकंड वाला टेस्ट चलाकर स्पीड और MP4 क्वालिटी देखें।</div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span id="timerText" class="status-highlight">00:00 / 00:10</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+
+<script>
+  const frame = document.getElementById('renderFrame');
+  const wrapper = document.getElementById('stageWrapper');
+  const statusText = document.getElementById('statusText');
+  const timerText = document.getElementById('timerText');
+  const progressFill = document.getElementById('progressFill');
+
+  function fitStage() {
+    const rect = wrapper.getBoundingClientRect();
+    const scaleX = rect.width / 1920;
+    const scaleY = rect.height / 1080;
+    const scale = Math.min(scaleX, scaleY);
+    frame.style.transform = `scale(${scale})`;
+    const offsetX = (rect.width - 1920 * scale) / 2;
+    const offsetY = (rect.height - 1080 * scale) / 2;
+    frame.style.left = `${offsetX}px`;
+    frame.style.top = `${offsetY}px`;
+  }
+  window.addEventListener('resize', fitStage);
+  setTimeout(fitStage, 100);
+
+  function loadPreview(isRecording = false, callback = null) {
+    const code = document.getElementById('htmlCode').value.trim();
+    if (!code) {
+      alert("कृपया पहले बाईं तरफ अपना HTML कोड पेस्ट करें!");
+      return;
+    }
+
+    const sharpCSS = `
+      <style>
+        html, body {
+          width: 1920px !important; height: 1080px !important;
+          margin: 0 !important; padding: 0 !important;
+          overflow: hidden !important; background: #000 !important;
+          -webkit-font-smoothing: subpixel-antialiased !important;
+          text-rendering: geometricPrecision !important;
+          ${isRecording ? 'cursor: none !important;' : ''}
+        }
+        ${isRecording ? '* { cursor: none !important; }' : ''}
+      </style>
+    `;
+
+    const finalHTML = code.includes('<head>')
+      ? code.replace('<head>', '<head>' + sharpCSS)
+      : sharpCSS + code;
+
+    frame.onload = () => {
+      fitStage();
+      // नीचे की टाइमलाइन को हमेशा दिखाए रखना
+      try {
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        doc.querySelectorAll('div, nav, footer, .controls, #controls, .timeline, #timeline, .timeline-bar').forEach(el => {
+          const txt = el.innerText || '';
+          if (txt.includes('FULLSCREEN') || txt.includes('02:30') || txt.includes('00:10') || txt.includes('SCENE') || txt.includes('PAUSE') || txt.includes('START')) {
+            el.style.setProperty('display', 'flex', 'important');
+            el.style.setProperty('visibility', 'visible', 'important');
+            el.style.setProperty('opacity', '1', 'important');
+            el.style.setProperty('z-index', '99999', 'important');
+          }
+        });
+      } catch (e) {}
+      if (callback) callback();
+    };
+    frame.srcdoc = finalHTML;
+  }
+
+  async function preCacheAllAssets(code) {
+    const urlRegex = /https?:\/\/[^\s"'<>)]+/g;
+    const urls = [...new Set(code.match(urlRegex) || [])];
+    if (urls.length > 0) {
+      statusText.innerHTML = `📦 ${urls.length} एक्सटर्नल एसेट्स कैश किए जा रहे हैं...`;
+      await Promise.all(urls.map(url =>
+        fetch(url, { mode: 'no-cors', cache: 'force-cache' }).catch(() => null)
+      ));
+    }
+    for (let s = 4; s >= 1; s--) {
+      statusText.innerHTML = `⚡ सभी फाइलें सुरक्षित! रिकॉर्डिंग ${s} सेकंड में शुरू होगी...`;
+      await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+
+  async function startTrueMP4Export() {
+    const code = document.getElementById('htmlCode').value.trim();
+    if (!code) {
+      alert("पहले बाईं तरफ अपना HTML कोड पेस्ट करें!");
+      return;
+    }
+
+    const videoDurationSec = parseInt(document.getElementById('durationInput').value) || 10;
+    const TARGET_FPS = 30;
+    const exportBtn = document.getElementById('exportBtn');
+    exportBtn.disabled = true;
+
+    try {
+      statusText.innerHTML = "🖥️ पॉप-अप में 'This Tab' चुनें और 'Share' दबाएं...";
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          frameRate: { ideal: TARGET_FPS, max: TARGET_FPS },
+          cursor: "never"
+        },
+        audio: false,
+        preferCurrentTab: true
+      });
+
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen().catch(() => {});
+      }
+
+      document.body.classList.add('recording-mode');
+      fitStage();
+
+      await preCacheAllAssets(code);
+
+      await new Promise(resolve => {
+        loadPreview(true, () => setTimeout(resolve, 400));
+      });
+
+      const track = stream.getVideoTracks()[0];
+      const settings = track.getSettings();
+      const width = Math.floor((settings.width || 1920) / 2) * 2;
+      const height = Math.floor((settings.height || 1080) / 2) * 2;
+
+      // सच्चा MP4 कंटेनर (Mp4Muxer) — ताकि कभी GIF या 309KB की फाइल न बने
+      const muxer = new Mp4Muxer.Muxer({
+        target: new Mp4Muxer.ArrayBufferTarget(),
+        video: {
+          codec: 'avc',
+          width: width,
+          height: height
+        },
+        fastStart: 'in-memory'
+      });
+
+      const encoder = new VideoEncoder({
+        output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+        error: e => console.error("Encoder Error:", e)
+      });
+
+      // मेन प्रोफाइल H.264 (avc1.4d002a) — 4 GB PC पर भी बिना क्रैश हुए 1080p/2K सपोर्ट करता है
+      encoder.configure({
+        codec: 'avc1.4d002a',
+        width: width,
+        height: height,
+        bitrate: 18_000_000, // 18 Mbps क्रिस्टल-क्लियर क्वालिटी
+        framerate: TARGET_FPS
+      });
+
+      // Start बटन क्लिक करना
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const startBtn = Array.from(doc.querySelectorAll('button, [role="button"]')).find(b => {
+        const t = (b.innerText || '').toLowerCase();
+        return t.includes('start') || t.includes('play') || t.includes('शुरू');
+      });
+      if (startBtn) startBtn.click();
+
+      const processor = new MediaStreamTrackProcessor({ track });
+      const reader = processor.readable.getReader();
+
+      const totalTargetFrames = videoDurationSec * TARGET_FPS;
+      const frameDurationUs = Math.round(1_000_000 / TARGET_FPS); // ठीक 33,333 माइक्रोसेकंड प्रति फ्रेम
+      const captureIntervalMs = 1000 / TARGET_FPS; // ठीक 1x स्पीड (33.33 ms)
+      let capturedFrames = 0;
+      const startTimeMs = performance.now();
+      let nextCaptureTime = startTimeMs;
+
+      const uiTimer = setInterval(() => {
+        const elapsedSec = Math.min(videoDurationSec, Math.floor((performance.now() - startTimeMs) / 1000));
+        const pct = Math.min(100, (elapsedSec / videoDurationSec) * 100);
+        progressFill.style.width = `${pct}%`;
+        timerText.innerText = `${formatTime(elapsedSec)} / ${formatTime(videoDurationSec)}`;
+      }, 250);
+
+      // ठीक 1x स्पीड पर हर 33.33ms का 1 फ्रेम पकड़कर MP4 में जोड़ना
+      while (capturedFrames < totalTargetFrames) {
+        const { value: videoFrame, done } = await reader.read();
+        if (done || !videoFrame) break;
+
+        const now = performance.now();
+        // अगर एनकोडर की कतार भरी न हो और 33.33ms का समय हो गया हो
+        if (now >= nextCaptureTime && encoder.encodeQueueSize < 8) {
+          const timestampUs = capturedFrames * frameDurationUs;
+          const clonedFrame = new VideoFrame(videoFrame, { timestamp: timestampUs });
+          encoder.encode(clonedFrame, { keyFrame: capturedFrames % 30 === 0 });
+          clonedFrame.close();
+
+          capturedFrames++;
+          nextCaptureTime += captureIntervalMs;
+          // अगर किसी कारण से पीसी हल्का सा अटका, तो घड़ी को आगे बढ़ा देना ताकि बाद में वीडियो तेज़ न भागे
+          if (now - nextCaptureTime > 100) {
+            nextCaptureTime = now;
+          }
+        }
+        videoFrame.close();
+      }
+
+      clearInterval(uiTimer);
+      track.stop();
+      await encoder.flush();
+      muxer.finalize();
+
+      if (document.fullscreenElement) {
+        await document.exitFullscreen().catch(() => {});
+      }
+      document.body.classList.remove('recording-mode');
+      fitStage();
+
+      const mp4Buffer = muxer.target.buffer;
+      const blob = new Blob([mp4Buffer], { type: 'video/mp4' });
+      const sizeMB = (blob.size / (1024 * 1024)).toFixed(2);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `GURU_GYANORA_EXACT_1X_${videoDurationSec}s.mp4`;
+      a.click();
+
+      exportBtn.disabled = false;
+      statusText.innerHTML = `🎉 परफेक्ट MP4 तैयार! साइज: ${sizeMB} MB | लंबाई: ${formatTime(videoDurationSec)} (Exact 1x Speed)`;
+
+    } catch (err) {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen().catch(() => {});
+      }
+      document.body.classList.remove('recording-mode');
+      fitStage();
+      exportBtn.disabled = false;
+      statusText.innerHTML = "❌ त्रुटि या रद्द: " + err.message;
+    }
+  }
+
+  function formatTime(sec) {
+    const m = String(Math.floor(sec / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    return `${m}:${s}`;
+  }
+</script>
+</body>
+</html>
