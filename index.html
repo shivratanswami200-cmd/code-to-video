@@ -13,48 +13,50 @@
         }
 
         body {
-            /* आपके पसंदीदा लाइट और सॉफ्ट ग्रेडिएंट टोन पर आधारित */
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            /* लाइट पिंक, पीच और सॉफ्ट येलो ग्रेडिएंट बैकग्राउंड */
+            background: linear-gradient(135deg, #ffe4e6 0%, #fef08a 50%, #fecdd3 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #1e293b;
+            color: #3f1d2e;
         }
 
         .hub-container {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
+            /* हल्का क्रीम-पिंक टिंटेड कार्ड */
+            background: linear-gradient(145deg, rgba(255, 241, 242, 0.92), rgba(254, 249, 195, 0.88));
+            backdrop-filter: blur(12px);
             padding: 50px 40px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border-radius: 26px;
+            box-shadow: 0 20px 45px rgba(225, 29, 72, 0.14);
             text-align: center;
             max-width: 680px;
             width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(253, 164, 175, 0.6);
         }
 
         .badge {
             display: inline-block;
-            background: #e0e7ff;
-            color: #3730a3;
-            padding: 6px 16px;
+            background: linear-gradient(90deg, #fecdd3, #fef08a);
+            color: #9f1239;
+            padding: 6px 18px;
             border-radius: 50px;
             font-size: 0.85rem;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 1px;
             margin-bottom: 16px;
+            border: 1px solid #fda4af;
         }
 
         h1 {
             font-size: 2.2rem;
-            color: #0f172a;
+            color: #881337;
             margin-bottom: 12px;
             font-weight: 800;
         }
 
         p.subtitle {
-            color: #475569;
+            color: #701a3c;
             font-size: 1.05rem;
             margin-bottom: 40px;
             line-height: 1.5;
@@ -73,47 +75,51 @@
             justify-content: center;
             text-decoration: none;
             padding: 32px 20px;
-            border-radius: 18px;
+            border-radius: 20px;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border: 2px solid transparent;
             position: relative;
             overflow: hidden;
         }
 
-        /* 1x बटन स्टाइल */
+        /* 1x बटन स्टाइल: लाइट येलो से सॉफ्ट पिंक */
         .btn-1x {
-            background: #ffffff;
-            color: #0f172a;
-            border-color: #cbd5e1;
-            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+            background: linear-gradient(135deg, #fef08a 0%, #fbcfe8 100%);
+            color: #881337;
+            border: 2px solid #f472b6;
+            box-shadow: 0 10px 25px rgba(244, 114, 182, 0.22);
         }
 
         .btn-1x:hover {
             transform: translateY(-6px);
-            border-color: #2563eb;
-            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.15);
+            border-color: #e11d48;
+            box-shadow: 0 16px 32px rgba(225, 29, 72, 0.28);
         }
 
-        /* 2x बटन स्टाइल */
+        /* 2x बटन स्टाइल: सॉफ्ट रेड से पिंक-कोरल ग्रेडिएंट */
         .btn-2x {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: #ffffff;
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+            color: #fff1f2;
+            border: 2px solid #fda4af;
+            box-shadow: 0 10px 25px rgba(225, 29, 72, 0.32);
         }
 
         .btn-2x:hover {
             transform: translateY(-6px);
-            box-shadow: 0 18px 35px rgba(37, 99, 235, 0.45);
+            box-shadow: 0 18px 36px rgba(225, 29, 72, 0.45);
         }
 
         .speed-tag {
-            font-size: 2.4rem;
+            font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 8px;
         }
 
         .btn-1x .speed-tag {
-            color: #2563eb;
+            color: #be123c;
+        }
+
+        .btn-2x .speed-tag {
+            color: #fef08a;
         }
 
         .btn-title {
@@ -124,7 +130,7 @@
 
         .btn-desc {
             font-size: 0.85rem;
-            opacity: 0.85;
+            opacity: 0.92;
             line-height: 1.4;
         }
 
