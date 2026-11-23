@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GURU GYANORA - HTML Video Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* आपके पसंदीदा लाइट और सॉफ्ट ग्रेडिएंट टोन पर आधारित */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1e293b;
+        }
+
+        .hub-container {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 50px 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 680px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        p.subtitle {
+            color: #475569;
+            font-size: 1.05rem;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .mode-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            padding: 32px 20px;
+            border-radius: 18px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 1x बटन स्टाइल */
+        .btn-1x {
+            background: #ffffff;
+            color: #0f172a;
+            border-color: #cbd5e1;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+        }
+
+        .btn-1x:hover {
+            transform: translateY(-6px);
+            border-color: #2563eb;
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.15);
+        }
+
+        /* 2x बटन स्टाइल */
+        .btn-2x {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-2x:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 35px rgba(37, 99, 235, 0.45);
+        }
+
+        .speed-tag {
+            font-size: 2.4rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .btn-1x .speed-tag {
+            color: #2563eb;
+        }
+
+        .btn-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .btn-desc {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 600px) {
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hub-container">
+        <div class="badge">GURU GYANORA STUDIO</div>
+        <h1>HTML Animation Recorder</h1>
+        <p class="subtitle">अपना HTML कोड पेस्ट करें, लाइव प्रीव्यू देखें और अपनी आवश्यकता के अनुसार रिकॉर्डिंग स्पीड चुनें</p>
+
+        <div class="button-grid">
+            <!-- बटन 1: 1x नॉर्मल स्पीड -->
+            <a href="player-1x.html" class="mode-btn btn-1x">
+                <span class="speed-tag">1x</span>
+                <span class="btn-title">Normal Speed Mode</span>
+                <span class="btn-desc">रियल-टाइम स्पीड पर कोड प्रीव्यू और स्क्रीन रिकॉर्डिंग</span>
+            </a>
+
+            <!-- बटन 2: 2x फास्ट स्पीड -->
+            <a href="player-2x.html" class="mode-btn btn-2x">
+                <span class="speed-tag">2x</span>
+                <span class="btn-title">Fast Render Mode</span>
+                <span class="btn-desc">दोगुनी (2x) स्पीड पर फास्ट वीडियो आउटपुट और रिकॉर्डिंग</span>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
