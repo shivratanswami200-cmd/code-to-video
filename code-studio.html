@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual Studio Code</title>
+<style>
+  :root {
+    --ed-bg: #1e1e1e;
+    --ed-sidebar: #252526;
+    --ed-activity: #333333;
+    --ed-menubar: #323233;
+    --ed-tab-inactive: #2d2d2d;
+    --ed-border: #2b2b2b;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body, html {
+    width: 100%;
+    height: 100%;
+    background-color: var(--ed-bg);
+    color: #d4d4d4;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Main Workspace above Windows Taskbar */
+  #workspace {
+    display: flex;
+    width: 100vw;
+    height: calc(100vh - 44px);
+    overflow: hidden;
+  }
+
+  /* Left Side: Full Realistic VS Code Window */
+  #vscode-pane {
+    width: 48%;
+    height: 100%;
+    background: var(--ed-bg);
+    border-right: 1px solid var(--ed-border);
+    display: flex;
+    flex-direction: column;
+    transition: background 0.25s ease;
+  }
+
+  /* Top VS Code Menu Bar */
+  .vscode-menubar {
+    height: 30px;
+    background: var(--ed-menubar);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 4px;
+    font-size: 12.5px;
+    color: #cccccc;
+    user-select: none;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--ed-sidebar);
+  }
+
+  .vscode-logo {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .menu-item {
+    padding: 3px 7px;
+    border-radius: 4px;
+    cursor: default;
+  }
+  .menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+
+  /* Body below Menu Bar */
+  .vscode-body {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+  }
+
+  /* Left Activity Bar */
+  .activity-bar {
+    width: 48px;
+    background: var(--ed-activity);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0 6px 0;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .act-top, .act-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .act-btn {
+    width: 48px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    opacity: 0.55;
+    transition: opacity 0.15s;
+  }
+
+  .act-btn:hover {
+    opacity: 0.95;
+  }
+
+  .act-btn.active {
+    opacity: 1;
+  }
+
+  .act-btn.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: #ffffff;
+  }
+
+  .act-icon {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+  }
+
+  /* Collapsible Side Drawer */
+  #side-drawer {
+    width: 0;
+    background: var(--ed-sidebar);
+    border-right: 1px solid var(--ed-bg);
+    overflow: hidden;
+    transition: width 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  #side-drawer.open {
+    width: 195px;
+  }
+
+  .drawer-header {
+    padding: 10px 14px;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    color: #bbbbbb;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .drawer-item {
+    padding: 7px 14px;
+    font-size: 13px;
+    color: #cccccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .drawer-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .drawer-item.active-file {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+  }
+
+  .merge-ext-btn {
+    margin: 10px 12px;
+    padding: 8px 10px;
+    background: #0e639c;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .merge-ext-btn:hover {
+    background: #1177bb;
+  }
+
+  .search-box-wrap {
+    padding: 8px 12px;
+  }
+
+  .search-input {
+    width: 100%;
+    background: #3c3c3c;
+    border: 1px solid #007fd4;
+    color: #ffffff;
+    padding: 5px 8px;
+    font-size: 12.5px;
+    outline: none;
+  }
+
+  .search-results {
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #9cdcfe;
+    overflow-y: auto;
+  }
+
+  /* Main Editor Column */
+  .editor-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--ed-bg);
+  }
+
+  /* VS Code File Tabs Bar */
+  .tabs-bar {
+    height: 35px;
+    background: var(--ed-sidebar);
+    display: flex;
+    align-items: center;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .tab {
+    height: 100%;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: #969696;
+    background: var(--ed-tab-inactive);
+    border-right: 1px solid var(--ed-bg);
+    cursor: pointer;
+  }
+
+  .tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #dddddd;
+  }
+
+  .tab.active {
+    background: var(--ed-bg);
+    color: #ffffff;
+    border-top: 1px solid #007acc;
+  }
+
+  .icon-html { color: #e44d26; font-weight: bold; font-size: 11px; }
+  .icon-css  { color: #2965f1; font-weight: bold; font-size: 11px; }
+  .icon-js   { color: #f7df1e; font-weight: bold; font-size: 11px; }
+
+  /* Breadcrumb bar */
+  .breadcrumb-bar {
+    height: 22px;
+    background: var(--ed-bg);
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #858585;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
+  /* Editor Scroll & Continuous Vertical + Faint Horizontal Lines */
+  #editor-scroll {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    padding: 8px 14px 70px 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 14.5px;
+    line-height: 22px;
+    scroll-behavior: smooth;
+  }
+
+  #editor-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  #editor-scroll::-webkit-scrollbar-thumb {
+    background: rgba(121, 121, 121, 0.35);
+  }
+
+  .code-line-row {
+    display: flex;
+    align-items: stretch;
+    min-height: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.032);
+  }
+
+  .code-line-row.active-line {
+    background: rgba(255, 255, 255, 0.045);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .gutter-num {
+    width: 46px;
+    text-align: right;
+    padding-right: 14px;
+    color: #858585;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .code-line-row.active-line .gutter-num {
+    color: #c6c6c6;
+  }
+
+  .indent-guides {
+    display: inline-flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .indent-unit {
+    display: inline-block;
+    width: 2ch;
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
+    margin-top: -1px;
+    margin-bottom: -1px;
+  }
+
+  .indent-unit.active-guide {
+    border-left: 1px solid rgba(255, 255, 255, 0.34);
+  }
+
+  .line-content {
+    flex: 1;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #d4d4d4;
+  }
+
+  /* Blinking Cursor */
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 17px;
+    background-color: #aeafad;
+    vertical-align: text-bottom;
+    animation: blink 0.9s infinite;
+  }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  /* Rich VS Code Dark+ Syntax Colors */
+  .vs-bracket { color: #808080; }
+  .vs-tag     { color: #569cd6; }
+  .vs-attr    { color: #9cdcfe; }
+  .vs-str     { color: #ce9178; }
+  .vs-comment { color: #6a9955; font-style: italic; }
+  .vs-sel     { color: #d7ba7d; }
+  .vs-prop    { color: #9cdcfe; }
+  .vs-val     { color: #ce9178; }
+  .vs-num     { color: #b5cea8; }
+  .vs-kw      { color: #569cd6; }
+  .vs-ctrl    { color: #c586c0; }
+  .vs-fn      { color: #dcdcaa; }
+  .vs-var     { color: #9cdcfe; }
+  .vs-punc    { color: #ffd700; }
+
+  /* Right Side: Live Interactive Preview */
+  #preview-pane {
+    flex: 1;
+    height: 100%;
+    background: #000000;
+    position: relative;
+  }
+
+  #live-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    pointer-events: auto;
+  }
+
+  /* Stealth Replay Button */
+  #stealth-controls {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: 20;
+  }
+
+  #preview-pane:hover #stealth-controls {
+    opacity: 0.85;
+  }
+
+  .stealth-btn {
+    background: rgba(37, 37, 38, 0.85);
+    color: #cccccc;
+    border: 1px solid #454545;
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stealth-btn:hover {
+    background: #0e639c;
+    color: #ffffff;
+  }
+
+  /* Realistic Windows 11 Bottom Taskbar (Shifted Left + Extended App & Tray Icons) */
+  .win-taskbar {
+    height: 44px;
+    width: 100vw;
+    background: rgba(24, 24, 27, 0.98);
+    border-top: 1px solid #333336;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    user-select: none;
+    flex-shrink: 0;
+    z-index: 50;
+  }
+
+  .tb-left-group {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .tb-weather {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #e0e0e0;
+    padding-right: 10px;
+  }
+
+  .tb-apps {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .tb-icon-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.15s;
+  }
+
+  .tb-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .tb-icon-btn.app-open {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .tb-icon-btn.app-open::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    width: 6px;
+    height: 3px;
+    border-radius: 2px;
+    background: #8a8a8e;
+  }
+
+  .tb-icon-btn.app-focused {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .tb-icon-btn.app-focused::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    width: 16px;
+    height: 3px;
+    border-radius: 2px;
+    background: #60cdff;
+  }
+
+  .tb-search-pill {
+    height: 30px;
+    width: 155px;
+    background: #2d2d30;
+    border: 1px solid #3f3f44;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+    color: #b8b8b8;
+    font-size: 12px;
+  }
+
+  .tb-right {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 11.5px;
+    color: #e0e0e0;
+  }
+
+  .rec-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(239, 68, 68, 0.16);
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 10.5px;
+    color: #fca5a5;
+  }
+
+  .rec-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ef4444;
+    animation: recPulse 1.2s infinite;
+  }
+
+  @keyframes recPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  /* Setup & Export Modals */
+  .overlay-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(18, 18, 20, 0.96);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .overlay-modal.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .modal-box {
+    width: 90%;
+    max-width: 840px;
+    background: #252526;
+    border: 1px solid #3c3c3c;
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.85);
+  }
+
+  .modal-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .modal-box h2 {
+    font-size: 18px;
+    color: #fff;
+  }
+
+  .modal-box p {
+    font-size: 13px;
+    color: #aaaaaa;
+    margin-bottom: 14px;
+  }
+
+  .ai-prompt-btn {
+    background: #2d2d30;
+    color: #7ee787;
+    border: 1px solid #3ea854;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ai-prompt-btn:hover {
+    background: #238636;
+    color: #ffffff;
+  }
+
+  .code-textarea {
+    width: 100%;
+    height: 300px;
+    background: #1e1e1e;
+    border: 1px solid #3c3c3c;
+    color: #9cdcfe;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    padding: 12px;
+    border-radius: 6px;
+    resize: none;
+    outline: none;
+    margin-bottom: 16px;
+  }
+
+  .modal-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .modal-options-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+
+  select {
+    background: #1e1e1e;
+    color: #fff;
+    border: 1px solid #3c3c3c;
+    padding: 7px 11px;
+    border-radius: 5px;
+    font-size: 13px;
+  }
+
+  .start-btn {
+    background: #0e639c;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .start-btn:hover {
+    background: #1177bb;
+  }
+
+  .sec-btn {
+    background: #3c3c3c;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .sec-btn:hover {
+    background: #4b4b4b;
+  }
+
+  #countdown {
+    position: fixed;
+    inset: 0;
+    background: var(--ed-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    font-weight: bold;
+    color: #569cd6;
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+  }
+  #countdown.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+  <div id="workspace">
+    <!-- Left: Full Authentic VS Code -->
+    <div id="vscode-pane">
+      <!-- Top Menu Bar -->
+      <div class="vscode-menubar">
+        <svg class="vscode-logo" viewBox="0 0 24 24">
+          <path fill="#007acc" d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
+        </svg>
+        <div class="menu-item">File</div>
+        <div class="menu-item">Edit</div>
+        <div class="menu-item">Selection</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Go</div>
+        <div class="menu-item">Run</div>
+        <div class="menu-item">Terminal</div>
+        <div class="menu-item">Help</div>
+      </div>
+
+      <div class="vscode-body">
+        <!-- Activity Bar -->
+        <div class="activity-bar">
+          <div class="act-top">
+            <div class="act-btn" id="btn-explorer" title="Explorer" onclick="toggleDrawer('explorer')">
+              <svg class="act-icon" viewBox="0 0 24 24"><path d="M17.5 0h-9L7 1.5V6H2.5L1 7.5v15.07L2.5 24h12.07L16 22.57V18h4.7l1.3-1.43V4.5L17.5 0zm0 2.12l2.38 2.38H17.5V2.12zm-3 20.38h-12v-15H7v9.07L8.5 18h6v4.5zm6-6h-12v-15H16V6h4.5v10.5z"/></svg>
+            </div>
+            <div class="act-btn" id="btn-search" title="Search" onclick="toggleDrawer('search')">
+              <svg class="act-icon" viewBox="0 0 24 24"><path d="M15.25 0a8.25 8.25 0 0 0-6.18 13.72L1 22.88l1.12 1.12 8.05-9.12A8.251 8.251 0 1 0 15.25.01V0zm0 15a6.75 6.75 0 1 1 0-13.5 6.75 6.75 0 0 1 0 13.5z"/></svg>
+            </div>
+            <div class="act-btn" id="btn-git" title="Source Control" onclick="toggleDrawer('git')">
+              <svg class="act-icon" viewBox="0 0 24 24"><path d="M21.007 8.222A3.738 3.738 0 0 0 15.045 5.2a3.737 3.737 0 0 0 1.156 6.583 2.988 2.988 0 0 1-2.668 1.67h-2.99a4.456 4.456 0 0 0-2.989 1.165V7.4a3.737 3.737 0 1 0-1.494 0v9.117a3.776 3.776 0 1 0 1.816.099 2.99 2.99 0 0 1 2.668-1.667h2.99a4.484 4.484 0 0 0 4.223-3.039 3.736 3.736 0 0 0 3.25-3.687zM4.565 3.738a2.242 2.242 0 1 1 4.484 0 2.242 2.242 0 0 1-4.484 0zm4.484 16.441a2.242 2.242 0 1 1-4.484 0 2.242 2.242 0 0 1 4.484 0zm8.221-9.715a2.242 2.242 0 1 1 0-4.485 2.242 2.242 0 0 1 0 4.485z"/></svg>
+            </div>
+            <div class="act-btn" id="btn-ext" title="Extensions" onclick="toggleDrawer('ext')">
+              <svg class="act-icon" viewBox="0 0 24 24"><path d="M13.5 1.5L15 0h7.5L24 1.5V9l-1.5 1.5H15L13.5 9V1.5zm1.5 0V9h7.5V1.5H15zM0 15V6l1.5-1.5H9L10.5 6v7.5H18l1.5 1.5v7.5L18 24H1.5L0 22.5V15zm9-1.5V6H1.5v7.5H9zM9 15H1.5v7.5H9V15zm1.5 7.5H18V15h-7.5v7.5z"/></svg>
+            </div>
+            <div class="act-btn" id="btn-debug" title="Run and Debug" onclick="toggleDrawer('debug')">
+              <svg class="act-icon" viewBox="0 0 24 24"><path d="M10.97 8.265l6.5 4.2a.5.5 0 0 1 0 .84l-6.5 4.2a.5.5 0 0 1-.77-.42v-8.4a.5.5 0 0 1 .77-.42zM7.5 3A4.5 4.5 0 0 1 12 7.5v.28a6.5 6.5 0 0 1 4.47 4.72H19v1.5h-2.53a6.5 6.5 0 0 1-.82 2.22l1.82 1.82-1.06 1.06-1.74-1.74A6.48 6.48 0 0 1 10.5 19a6.48 6.48 0 0 1-4.17-1.64l-1.74 1.74-1.06-1.06 1.82-1.82A6.5 6.5 0 0 1 4.53 14H2v-1.5h2.53A6.5 6.5 0 0 1 9 7.78V7.5A4.5 4.5 0 0 1 7.5 3z"/></svg>
+            </div>
+          </div>
+
+          <div class="act-bottom">
+            <div class="act-btn" title="Accounts">
+              <svg class="act-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+            </div>
+            <div class="act-btn" title="Manage">
+              <svg class="act-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsible Side Drawer -->
+        <div id="side-drawer">
+          <div id="drawer-content"></div>
+        </div>
+
+        <!-- Main Code Column -->
+        <div class="editor-column">
+          <div class="tabs-bar">
+            <div class="tab active" id="tab-html" onclick="switchTabManually('html')"><span class="icon-html">&lt;&gt;</span> index.html</div>
+            <div class="tab" id="tab-css" onclick="switchTabManually('css')"><span class="icon-css">#</span> style.css</div>
+            <div class="tab" id="tab-js" onclick="switchTabManually('js')"><span class="icon-js">JS</span> script.js</div>
+          </div>
+          <div class="breadcrumb-bar" id="breadcrumb">project &gt; index.html</div>
+
+          <div id="editor-scroll"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Live Interactive Preview -->
+    <div id="preview-pane">
+      <iframe id="live-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+      <div id="stealth-controls">
+        <button class="stealth-btn" title="Replay Typing" onclick="startRealCoder(false)">↻</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Windows 11 Taskbar (Shifted Left + YouTube, Notepad, Notepad++, Wi-Fi, Recording & Notification Icons) -->
+  <div class="win-taskbar">
+    <div class="tb-left-group">
+      <!-- Weather -->
+      <div class="tb-weather">
+        <span style="font-size:15px;">⛅</span>
+        <div>
+          <div style="font-weight:600; line-height:1.1;">15°C</div>
+          <div style="font-size:10px; color:#a0a0a0;">Cloudy</div>
+        </div>
+      </div>
+
+      <!-- Apps & Search shifted slightly toward left -->
+      <div class="tb-apps">
+        <!-- Windows 11 Start -->
+        <div class="tb-icon-btn" title="Start">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#00a4ef" d="M2 2h9.5v9.5H2V2zm10.5 0H22v9.5h-9.5V2zM2 12.5h9.5V22H2v-9.5zm10.5 0H22V22h-9.5v-9.5z"/>
+          </svg>
+        </div>
+
+        <!-- Search Pill -->
+        <div class="tb-search-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="#b8b8b8"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <span>Search</span>
+        </div>
+
+        <!-- Task View -->
+        <div class="tb-icon-btn" title="Task View">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <rect x="2" y="4" width="12" height="14" rx="2" fill="#4f545c" stroke="#c8c8c8" stroke-width="1.5"/>
+            <rect x="10" y="6" width="12" height="14" rx="2" fill="#2b2d30" stroke="#ffffff" stroke-width="1.5"/>
+          </svg>
+        </div>
+
+        <!-- File Explorer -->
+        <div class="tb-icon-btn app-open" title="File Explorer">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path fill="#f7c548" d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
+            <path fill="#2980b9" d="M8 14h8v4H8z"/>
+          </svg>
+        </div>
+
+        <!-- Microsoft Store -->
+        <div class="tb-icon-btn" title="Microsoft Store">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path fill="#e1e1e1" d="M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2z"/>
+            <rect x="8.5" y="10" width="3" height="3" fill="#f25022"/>
+            <rect x="12.5" y="10" width="3" height="3" fill="#7fba00"/>
+            <rect x="8.5" y="14" width="3" height="3" fill="#00a4ef"/>
+            <rect x="12.5" y="14" width="3" height="3" fill="#ffb900"/>
+          </svg>
+        </div>
+
+        <!-- Google Chrome -->
+        <div class="tb-icon-btn app-open" title="Google Chrome">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#4caf50"/>
+            <path fill="#f44336" d="M12 2a10 10 0 0 1 8.66 5H12a5 5 0 0 0-4.33 2.5L4.4 3.84A9.96 9.96 0 0 1 12 2z"/>
+            <path fill="#ffeb3b" d="M12 7h8.66A10 10 0 0 1 12 22l4.33-7.5A5 5 0 0 0 12 7z"/>
+            <circle cx="12" cy="12" r="4.2" fill="#2196f3" stroke="#ffffff" stroke-width="1.5"/>
+          </svg>
+        </div>
+
+        <!-- Visual Studio Code (Active Focused Window) -->
+        <div class="tb-icon-btn app-focused" title="Visual Studio Code">
+          <svg width="19" height="19" viewBox="0 0 24 24">
+            <path fill="#007acc" d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
+          </svg>
+        </div>
+
+        <!-- Microsoft Edge -->
+        <div class="tb-icon-btn app-open" title="Microsoft Edge">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <defs>
+              <linearGradient id="edgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8"/>
+                <stop offset="50%" stop-color="#0284c7"/>
+                <stop offset="100%" stop-color="#10b981"/>
+              </linearGradient>
+            </defs>
+            <circle cx="12" cy="12" r="10" fill="url(#edgeGrad)"/>
+            <path fill="#ffffff" opacity="0.9" d="M12 6c3.3 0 6 2.5 6 5.5 0 1.2-.5 2.2-1.4 2.2-.8 0-1.2-.6-1.2-1.4 0-1.8-1.5-3.3-3.4-3.3-2.1 0-3.8 1.7-3.8 3.8 0 2.3 1.9 4.2 4.3 4.2 1.4 0 2.7-.5 3.7-1.3-.9 2.3-3.2 3.8-5.8 3.8-3.6 0-6.4-2.9-6.4-6.5C4 8.9 7.5 6 12 6z"/>
+          </svg>
+        </div>
+
+        <!-- Spotify -->
+        <div class="tb-icon-btn app-open" title="Spotify">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#1db954"/>
+            <path fill="none" stroke="#121212" stroke-width="1.9" stroke-linecap="round" d="M7.2 9.6c3.2-.9 6.8-.6 9.8 1.1M7.9 12.6c2.6-.7 5.5-.5 8 .9M8.6 15.4c2-.5 4.2-.4 6.1.7"/>
+          </svg>
+        </div>
+
+        <!-- YouTube App Icon -->
+        <div class="tb-icon-btn app-open" title="YouTube">
+          <svg width="21" height="21" viewBox="0 0 24 24">
+            <rect x="2" y="5" width="20" height="14" rx="4" fill="#ff0000"/>
+            <polygon points="10,8.5 16,12 10,15.5" fill="#ffffff"/>
+          </svg>
+        </div>
+
+        <!-- Windows Notepad Icon -->
+        <div class="tb-icon-btn" title="Notepad">
+          <svg width="19" height="19" viewBox="0 0 24 24">
+            <rect x="4" y="3" width="16" height="18" rx="2" fill="#38bdf8"/>
+            <rect x="4" y="3" width="16" height="4" rx="1" fill="#0284c7"/>
+            <line x1="7" y1="11" x2="17" y2="11" stroke="#ffffff" stroke-width="1.5"/>
+            <line x1="7" y1="14.5" x2="17" y2="14.5" stroke="#ffffff" stroke-width="1.5"/>
+            <line x1="7" y1="18" x2="13" y2="18" stroke="#ffffff" stroke-width="1.5"/>
+          </svg>
+        </div>
+
+        <!-- Notepad++ Icon -->
+        <div class="tb-icon-btn app-open" title="Notepad++">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="16" height="18" rx="2" fill="#84cc16"/>
+            <line x1="6" y1="8" x2="15" y2="8" stroke="#1a2e05" stroke-width="1.5"/>
+            <line x1="6" y1="12" x2="15" y2="12" stroke="#1a2e05" stroke-width="1.5"/>
+            <path d="M14 19l6-6 2 2-6 6h-2v-2z" fill="#facc15" stroke="#422006" stroke-width="0.8"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Tray: Screen Recording + Wi-Fi + Volume + Notification Bell + Clock -->
+    <div class="tb-right">
+      <!-- Active Screen Recording Indicator -->
+      <div class="rec-pill" title="Screen Recording Active">
+        <span class="rec-dot"></span>
+        <span>REC</span>
+      </div>
+
+      <span>ENG</span>
+
+      <!-- Wi-Fi Icon -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="#e0e0e0" title="Wi-Fi Connected">
+        <path d="M12 18c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4.9-2.3l1.4 1.4C9.4 16.4 10.6 16 12 16s2.6.4 3.5 1.1l1.4-1.4C15.6 14.6 13.9 14 12 14s-3.6.6-4.9 1.7zm-2.8-2.8l1.4 1.4C7.3 13 9.5 12 12 12s4.7 1 6.3 2.3l1.4-1.4C17.7 11.1 15 10 12 10s-5.7 1.1-7.7 2.9zM1.5 10.1l1.4 1.4C5.3 9.3 8.5 8 12 8s6.7 1.3 9.1 3.5l1.4-1.4C19.7 7.5 16 6 12 6S4.3 7.5 1.5 10.1z"/>
+      </svg>
+
+      <!-- Speaker Volume Icon -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="#e0e0e0" title="Volume">
+        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+      </svg>
+
+      <!-- Notification Bell Icon -->
+      <div style="position:relative; display:flex; align-items:center;" title="Notifications">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="#e0e0e0">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+        </svg>
+        <span style="position:absolute; top:-2px; right:-2px; width:6px; height:6px; border-radius:50%; background:#60cdff;"></span>
+      </div>
+
+      <!-- Clock & Date -->
+      <div style="text-align:right; line-height:1.15;">
+        <div id="tb-clock">01:25 PM</div>
+        <div style="font-size:10px; color:#b0b0b0;">25-11-2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="countdown">3</div>
+
+  <!-- Paste Modal with Editor Background Theme Selector & AI Prompt Button -->
+  <div id="setup-modal" class="overlay-modal">
+    <div class="modal-box">
+      <div class="modal-header-row">
+        <h2>Paste Your HTML Code</h2>
+        <button class="ai-prompt-btn" id="copy-ai-prompt-btn" onclick="copyAIPrompt()">📋 Copy AI Prompt for New Chat</button>
+      </div>
+      <p>कोड अपने-आप <b>index.html</b>, <b>style.css</b>, और <b>script.js</b> में बंट जाएगा। मर्ज कोड निकालने के लिए बाईं तरफ <b>Extensions</b> आइकन पर क्लिक करें।</p>
+      <textarea id="raw-code" class="code-textarea" placeholder="Paste your clean HTML/CSS/JS code here..."><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Glow Button</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #090d16;
+      font-family: sans-serif;
+    }
+    .glow-btn {
+      padding: 18px 42px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #00f2fe;
+      background: transparent;
+      border: 2px solid #00f2fe;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+      transition: all 0.3s ease;
+    }
+    .glow-btn:hover {
+      background: #00f2fe;
+      color: #090d16;
+      box-shadow: 0 0 45px #00f2fe;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <button class="glow-btn" id="actionBtn">CLICK ME</button>
+  </div>
+  <script>
+    const btn = document.getElementById('actionBtn');
+    let active = false;
+    btn.addEventListener('click', () => {
+      active = !active;
+      btn.textContent = active ? 'ACTIVATED!' : 'CLICK ME';
+      btn.style.borderColor = active ? '#ff007f' : '#00f2fe';
+      btn.style.color = active ? '#ff007f' : '#00f2fe';
+    });
+  </script>
+</body>
+</html></textarea>
+      <div class="modal-footer">
+        <div class="modal-options-wrap">
+          <div>
+            <label style="font-size:13px; color:#ccc; margin-right:6px;">Typing Speed:</label>
+            <select id="speed">
+              <option value="35">Natural Human (35ms)</option>
+              <option value="16" selected>Smooth Medium (16ms)</option>
+              <option value="6">Fast (6ms)</option>
+              <option value="2">Turbo (2ms)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size:13px; color:#ccc; margin-right:6px;">Editor Theme:</label>
+            <select id="theme-select" onchange="applyEditorTheme(this.value)">
+              <option value="grey" selected>VS Code Grey (#1e1e1e)</option>
+              <option value="black">Pitch Black (#0a0a0d)</option>
+              <option value="blue">Midnight Blue (#0f172a)</option>
+              <option value="purple">Deep Purple (#19112b)</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="start-btn" onclick="startRealCoder(false)">Start Studio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Merged Code Output Modal -->
+  <div id="merge-modal" class="overlay-modal hidden">
+    <div class="modal-box">
+      <h2>Merged Ready-to-Record HTML Code</h2>
+      <p>इसमें VS Code थीम, Windows Taskbar और आपका एनिमेशन पहले से मर्ज है। इसे कॉपी करके सीधे अपने <b>4K रिकॉर्डिंग टूल</b> में डालें।</p>
+      <textarea id="merged-output" class="code-textarea" readonly></textarea>
+      <div class="modal-footer">
+        <button class="sec-btn" onclick="closeMergeModal()">Close</button>
+        <button class="start-btn" id="copy-merged-btn" onclick="copyMergedCode()">Copy Merged Code</button>
+      </div>
+    </div>
+  </div>
+
+<script id="studio-core-script">
+  const setupModal = document.getElementById('setup-modal');
+  const mergeModal = document.getElementById('merge-modal');
+  const countdown = document.getElementById('countdown');
+  const editorScroll = document.getElementById('editor-scroll');
+  const liveFrame = document.getElementById('live-frame');
+  const breadcrumb = document.getElementById('breadcrumb');
+  const sideDrawer = document.getElementById('side-drawer');
+  const drawerContent = document.getElementById('drawer-content');
+
+  const tabHtml = document.getElementById('tab-html');
+  const tabCss = document.getElementById('tab-css');
+  const tabJs = document.getElementById('tab-js');
+
+  let timer = null;
+  let currentDrawer = null;
+  let isTyping = false;
+
+  let fileState = {
+    html: '',
+    css: '',
+    js: ''
+  };
+  let activeTab = 'html';
+
+  const VOID_TAGS = new Set(['meta', 'link', 'img', 'br', 'hr', 'input', 'source', 'area', 'base', 'col', 'embed', 'param', 'track', 'wbr']);
+
+  // VS Code Background Themes
+  const EDITOR_THEMES = {
+    grey: {
+      bg: '#1e1e1e',
+      sidebar: '#252526',
+      activity: '#333333',
+      menubar: '#323233',
+      tabInactive: '#2d2d2d',
+      border: '#2b2b2b'
+    },
+    black: {
+      bg: '#0a0a0d',
+      sidebar: '#111116',
+      activity: '#16161d',
+      menubar: '#14141a',
+      tabInactive: '#131318',
+      border: '#1f1f26'
+    },
+    blue: {
+      bg: '#0f172a',
+      sidebar: '#162038',
+      activity: '#1b2744',
+      menubar: '#18233d',
+      tabInactive: '#17223b',
+      border: '#243356'
+    },
+    purple: {
+      bg: '#19112b',
+      sidebar: '#22173b',
+      activity: '#291c47',
+      menubar: '#251940',
+      tabInactive: '#23183d',
+      border: '#352559'
+    }
+  };
+
+  function applyEditorTheme(themeKey) {
+    const t = EDITOR_THEMES[themeKey] || EDITOR_THEMES.grey;
+    const root = document.documentElement;
+    root.style.setProperty('--ed-bg', t.bg);
+    root.style.setProperty('--ed-sidebar', t.sidebar);
+    root.style.setProperty('--ed-activity', t.activity);
+    root.style.setProperty('--ed-menubar', t.menubar);
+    root.style.setProperty('--ed-tab-inactive', t.tabInactive);
+    root.style.setProperty('--ed-border', t.border);
+  }
+
+  function updateTaskbarClock() {
+    const now = new Date();
+    document.getElementById('tb-clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+  setInterval(updateTaskbarClock, 10000);
+  updateTaskbarClock();
+
+  function copyAIPrompt() {
+    const promptText = `Mujhe ek visual HTML/CSS/JS animation project ka single-file HTML code bana kar do. In strict rules ko follow karna:
+1. Code mein koi bhi descriptive comments (jaise "makdi ka jala", "step 1", "glowing effect" ya koi Hindi/English explanation comments) bilkul mat dalna. Sirf pure working code likhna.
+2. HTML structure <body> mein, saari CSS ek single <style> tag mein, aur saari JavaScript ek single <script> tag mein saaf-suthri alag-alag rakhna taaki unhe index.html, style.css aur script.js mein split kiya ja sake.
+3. Code lightweight, compact aur fast-rendering rakhna (faltu lambi lines ya heavy libraries mat dalna), aur proper 2-space indentation use karna.
+4. Animation 100% viewport (100vw x 100vh) ke center mein visually attractive aur smooth chalna chahiye.`;
+
+    navigator.clipboard.writeText(promptText).then(() => {
+      const btn = document.getElementById('copy-ai-prompt-btn');
+      btn.textContent = '✓ AI Prompt Copied!';
+      setTimeout(() => {
+        btn.textContent = '📋 Copy AI Prompt for New Chat';
+      }, 2500);
+    });
+  }
+
+  function toggleDrawer(type) {
+    document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
+
+    if (currentDrawer === type && sideDrawer.classList.contains('open')) {
+      sideDrawer.classList.remove('open');
+      currentDrawer = null;
+      return;
+    }
+
+    currentDrawer = type;
+    document.getElementById('btn-' + type).classList.add('active');
+    sideDrawer.classList.add('open');
+
+    if (type === 'explorer') {
+      drawerContent.innerHTML = `
+        <div class="drawer-header">Explorer</div>
+        <div class="drawer-item ${activeTab === 'html' ? 'active-file' : ''}" onclick="switchTabManually('html')"><span class="icon-html">&lt;&gt;</span> index.html</div>
+        <div class="drawer-item ${activeTab === 'css' ? 'active-file' : ''}" onclick="switchTabManually('css')"><span class="icon-css">#</span> style.css</div>
+        <div class="drawer-item ${activeTab === 'js' ? 'active-file' : ''}" onclick="switchTabManually('js')"><span class="icon-js">JS</span> script.js</div>
+      `;
+    } else if (type === 'search') {
+      drawerContent.innerHTML = `
+        <div class="drawer-header">Search</div>
+        <div class="search-box-wrap">
+          <input type="text" class="search-input" placeholder="Search in files..." oninput="runCodeSearch(this.value)">
+        </div>
+        <div class="search-results" id="search-results">Type to search...</div>
+      `;
+    } else if (type === 'git') {
+      drawerContent.innerHTML = `
+        <div class="drawer-header">Source Control</div>
+        <div style="padding:10px 14px; font-size:12px; color:#999;">main branch • 3 files tracked</div>
+      `;
+    } else if (type === 'debug') {
+      drawerContent.innerHTML = `
+        <div class="drawer-header">Run and Debug</div>
+        <div style="padding:10px 14px; font-size:12px; color:#999;">Chrome Live Preview Active</div>
+      `;
+    } else if (type === 'ext') {
+      drawerContent.innerHTML = `
+        <div class="drawer-header">Extensions</div>
+        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
+          <strong style="color:#fff; font-size:12.5px;">Live Server</strong>
+          <span style="font-size:11px; color:#858585;">Ritwick Dey • Active</span>
+        </div>
+        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
+          <strong style="color:#fff; font-size:12.5px;">Auto Close Tag</strong>
+          <span style="font-size:11px; color:#858585;">Jun Han • Enabled</span>
+        </div>
+        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
+          <strong style="color:#fff; font-size:12.5px;">Prettier</strong>
+          <span style="font-size:11px; color:#858585;">Code Formatter</span>
+        </div>
+        <button class="merge-ext-btn" onclick="openMergedCodeModal()">Export Merged Code</button>
+      `;
+    }
+  }
+
+  function openMergedCodeModal() {
+    const userCode = document.getElementById('raw-code').value;
+    const chosenSpeed = document.getElementById('speed').value;
+    const chosenTheme = document.getElementById('theme-select').value;
+
+    sideDrawer.classList.remove('open');
+    document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
+    currentDrawer = null;
+
+    const docClone = document.documentElement.cloneNode(true);
+    const cloneTextarea = docClone.querySelector('#raw-code');
+    if (cloneTextarea) cloneTextarea.textContent = userCode;
+
+    const cloneSetupModal = docClone.querySelector('#setup-modal');
+    if (cloneSetupModal) cloneSetupModal.classList.add('hidden');
+
+    const cloneSpeed = docClone.querySelector('#speed');
+    if (cloneSpeed) {
+      Array.from(cloneSpeed.options).forEach(opt => {
+        if (opt.value === chosenSpeed) opt.setAttribute('selected', 'selected');
+        else opt.removeAttribute('selected');
+      });
+    }
+
+    const cloneTheme = docClone.querySelector('#theme-select');
+    if (cloneTheme) {
+      Array.from(cloneTheme.options).forEach(opt => {
+        if (opt.value === chosenTheme) opt.setAttribute('selected', 'selected');
+        else opt.removeAttribute('selected');
+      });
+    }
+
+    const autoBoot = document.createElement('script');
+    autoBoot.textContent = `window.addEventListener('DOMContentLoaded', () => { applyEditorTheme('${chosenTheme}'); startRealCoder(true); });`;
+    docClone.querySelector('body').appendChild(autoBoot);
+
+    const finalMergedHTML = '<!DOCTYPE html>\n' + docClone.outerHTML;
+    document.getElementById('merged-output').value = finalMergedHTML;
+    document.getElementById('copy-merged-btn').textContent = 'Copy Merged Code';
+    mergeModal.classList.remove('hidden');
+  }
+
+  function closeMergeModal() {
+    mergeModal.classList.add('hidden');
+  }
+
+  function copyMergedCode() {
+    const out = document.getElementById('merged-output');
+    out.select();
+    document.execCommand('copy');
+    document.getElementById('copy-merged-btn').textContent = 'Copied! ✓';
+  }
+
+  function runCodeSearch(query) {
+    const resEl = document.getElementById('search-results');
+    if (!query.trim()) {
+      resEl.textContent = 'Type to search...';
+      return;
+    }
+    const q = query.toLowerCase();
+    let matches = [];
+    ['html', 'css', 'js'].forEach(f => {
+      const lines = fileState[f].split('\n');
+      lines.forEach((line, i) => {
+        if (line.toLowerCase().includes(q)) {
+          const fname = f === 'html' ? 'index.html' : (f === 'css' ? 'style.css' : 'script.js');
+          matches.push(`<div style="margin-bottom:6px; cursor:pointer;" onclick="switchTabManually('${f}')"><span style="color:#ce9178">${fname}:${i+1}</span><br><span style="color:#ccc">${line.trim().slice(0, 26)}</span></div>`);
+        }
+      });
+    });
+    resEl.innerHTML = matches.length ? matches.join('') : 'No results found.';
+  }
+
+  function splitCodeIntoFiles(raw) {
+    let cssParts = [];
+    let jsParts = [];
+
+    let htmlClean = raw.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, (match, cssContent) => {
+      cssParts.push(cssContent.trim());
+      return '<link rel="stylesheet" href="style.css">';
+    });
+
+    htmlClean = htmlClean.replace(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi, (match, jsContent) => {
+      jsParts.push(jsContent.trim());
+      return '<script src="script.js"><\/script>';
+    });
+
+    htmlClean = htmlClean.replace(/\n\s*\n\s*\n/g, '\n\n').trim();
+
+    return {
+      html: htmlClean,
+      css: cssParts.join('\n\n'),
+      js: jsParts.join('\n\n')
+    };
+  }
+
+  function setActiveTabUI(type) {
+    activeTab = type;
+    tabHtml.classList.remove('active');
+    tabCss.classList.remove('active');
+    tabJs.classList.remove('active');
+
+    if (type === 'html') {
+      tabHtml.classList.add('active');
+      breadcrumb.innerHTML = 'project &gt; index.html';
+    } else if (type === 'css') {
+      tabCss.classList.add('active');
+      breadcrumb.innerHTML = 'project &gt; style.css';
+    } else if (type === 'js') {
+      tabJs.classList.add('active');
+      breadcrumb.innerHTML = 'project &gt; script.js';
+    }
+
+    if (currentDrawer === 'explorer') {
+      toggleDrawer('explorer');
+      toggleDrawer('explorer');
+    }
+  }
+
+  function switchTabManually(type) {
+    setActiveTabUI(type);
+    renderCodeLines(fileState[type], '', type, false);
+  }
+
+  function highlightLine(line, type) {
+    let escaped = line
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    if (type === 'html') {
+      return escaped.replace(/(&lt;!--[\s\S]*?--&gt;)|(&lt;\/?)([a-zA-Z0-9\-]+)(.*?)(&gt;)/g, function(m, comment, open, tag, attrs, close) {
+        if (comment) return `<span class="vs-comment">${comment}</span>`;
+        let coloredAttrs = attrs.replace(/([a-zA-Z\-]+)(=)(".*?"|'.*?')/g, '<span class="vs-attr">$1</span>$2<span class="vs-str">$3</span>');
+        return `<span class="vs-bracket">${open}</span><span class="vs-tag">${tag}</span>${coloredAttrs}<span class="vs-bracket">${close}</span>`;
+      });
+    }
+
+    if (type === 'css') {
+      if (/^\s*\/\*/.test(escaped)) return `<span class="vs-comment">${escaped}</span>`;
+      if (escaped.includes('{') && !escaped.includes(':')) {
+        return escaped.replace(/^([^{]+)(\{)/, '<span class="vs-sel">$1</span><span class="vs-punc">$2</span>');
+      }
+      if (escaped.trim() === '}') {
+        return escaped.replace('}', '<span class="vs-punc">}</span>');
+      }
+      return escaped.replace(/^(\s*)([a-zA-Z\-]+)(\s*:\s*)([^;]+)(;?)/, function(m, sp, prop, col, val, semi) {
+        let coloredVal = val.replace(/\b(\d+(?:\.\d+)?(?:px|vh|vw|%|s|ms|deg|em|rem)?)\b/g, '<span class="vs-num">$1</span>');
+        coloredVal = coloredVal.replace(/(#[0-9a-fA-F]{3,8})/g, '<span class="vs-str">$1</span>');
+        return `${sp}<span class="vs-prop">${prop}</span>${col}<span class="vs-val">${coloredVal}</span>${semi}`;
+      });
+    }
+
+    if (type === 'js') {
+      const jsTokens = /(\/\/.*)|(".*?"|'.*?'|`.*?`)|\b(const|let|var|function|new|typeof|true|false|null|undefined)\b|\b(if|else|return|for|while|switch|case|break)\b|\b([a-zA-Z_$][\w$]*)(?=\s*\()|\.([a-zA-Z_$][\w$]*)|\b(\d+(?:\.\d+)?)\b|([{}()[\]])/g;
+      return escaped.replace(jsTokens, function(match, comment, str, kw, ctrl, fnCall, propAccess, num, punc) {
+        if (comment)    return `<span class="vs-comment">${comment}</span>`;
+        if (str)        return `<span class="vs-str">${str}</span>`;
+        if (kw)         return `<span class="vs-kw">${kw}</span>`;
+        if (ctrl)       return `<span class="vs-ctrl">${ctrl}</span>`;
+        if (fnCall)     return `<span class="vs-fn">${fnCall}</span>`;
+        if (propAccess) return `.<span class="vs-var">${propAccess}</span>`;
+        if (num)        return `<span class="vs-num">${num}</span>`;
+        if (punc)       return `<span class="vs-punc">${punc}</span>`;
+        return match;
+      });
+    }
+
+    return escaped;
+  }
+
+  function computeAutoClosedSuffix(typedSoFar) {
+    const tagRegex = /<\/?([a-zA-Z0-9\-]+)(?:\s[^>]*)?>/g;
+    let stack = [];
+    let match;
+    while ((match = tagRegex.exec(typedSoFar)) !== null) {
+      const fullTag = match[0];
+      const tagName = match[1].toLowerCase();
+      if (fullTag.startsWith('<!') || fullTag.endsWith('/>') || VOID_TAGS.has(tagName)) {
+        continue;
+      }
+      if (fullTag.startsWith('</')) {
+        if (stack.length > 0 && stack[stack.length - 1] === tagName) {
+          stack.pop();
+        }
+      } else {
+        stack.push(tagName);
+      }
+    }
+    return stack.reverse().map(t => `</${t}>`).join('');
+  }
+
+  function computeLineIndentLevels(allLines) {
+    const levels = new Array(allLines.length).fill(0);
+    for (let i = 0; i < allLines.length; i++) {
+      const m = allLines[i].match(/^( +)/);
+      levels[i] = m ? Math.floor(m[1].length / 2) : 0;
+    }
+    for (let i = 1; i < allLines.length - 1; i++) {
+      if (allLines[i].trim() === '') {
+        levels[i] = Math.min(levels[i - 1], levels[i + 1]);
+      }
+    }
+    return levels;
+  }
+
+  function renderCodeLines(beforeCursor, afterCursor, type, showCursor) {
+    const combined = beforeCursor + afterCursor;
+    const allLines = combined.split('\n');
+    const cursorLineIndex = beforeCursor.split('\n').length - 1;
+    const beforeLines = beforeCursor.split('\n');
+    const cursorColText = beforeLines[cursorLineIndex];
+
+    const indentLevelsArr = computeLineIndentLevels(allLines);
+    const activeLineIndent = showCursor ? (indentLevelsArr[cursorLineIndex] || 0) : 0;
+
+    const totalRows = Math.max(allLines.length, 36);
+    let htmlOut = '';
+
+    for (let i = 0; i < totalRows; i++) {
+      const isCursorRow = showCursor && (i === cursorLineIndex);
+      const rowClass = isCursorRow ? 'code-line-row active-line' : 'code-line-row';
+      let lineHtml = '';
+      let guidesHtml = '';
+
+      if (i < allLines.length) {
+        const rawLine = allLines[i];
+        const leadingMatch = rawLine.match(/^( +)/);
+        const actualSpaces = leadingMatch ? leadingMatch[1].length : 0;
+        const lineGuides = indentLevelsArr[i];
+
+        if (lineGuides > 0) {
+          let units = '';
+          for (let lvl = 0; lvl < lineGuides; lvl++) {
+            const isActiveBar = showCursor && (lvl === activeLineIndent - 1) && (lineGuides >= activeLineIndent);
+            units += `<span class="indent-unit${isActiveBar ? ' active-guide' : ''}"></span>`;
+          }
+          guidesHtml = `<span class="indent-guides">${units}</span>`;
+        }
+
+        const sliceOffset = Math.min(actualSpaces, lineGuides * 2);
+        const trimmedStartLine = rawLine.slice(sliceOffset);
+
+        if (isCursorRow) {
+          const cursorPosInTrimmed = Math.max(0, cursorColText.length - sliceOffset);
+          const beforeTrimmed = trimmedStartLine.slice(0, cursorPosInTrimmed);
+          const afterTrimmed = trimmedStartLine.slice(cursorPosInTrimmed);
+          lineHtml = guidesHtml + highlightLine(beforeTrimmed, type) + '<span class="cursor"></span>' + highlightLine(afterTrimmed, type);
+        } else {
+          lineHtml = guidesHtml + highlightLine(trimmedStartLine, type);
+        }
+      }
+
+      htmlOut += `<div class="${rowClass}"><div class="gutter-num">${i + 1}</div><div class="line-content">${lineHtml || ' '}</div></div>`;
+    }
+
+    editorScroll.innerHTML = htmlOut;
+
+    if (showCursor) {
+      const activeEl = editorScroll.querySelector('.active-line');
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }
+
+  function renderLiveStage(htmlStr, cssStr, jsStr) {
+    let combined = htmlStr;
+    if (cssStr) {
+      const styleTag = `<style>${cssStr}</style>`;
+      if (combined.includes('<link rel="stylesheet" href="style.css">')) {
+        combined = combined.replace('<link rel="stylesheet" href="style.css">', styleTag);
+      } else {
+        combined = styleTag + combined;
+      }
+    }
+    if (jsStr) {
+      const scriptTag = `<script>${jsStr}<\/script>`;
+      if (combined.includes('<script src="script.js"><\/script>')) {
+        combined = combined.replace('<script src="script.js"><\/script>', scriptTag);
+      } else {
+        combined = combined + scriptTag;
+      }
+    }
+
+    const doc = liveFrame.contentDocument || liveFrame.contentWindow.document;
+    doc.open();
+    doc.write(combined);
+    doc.close();
+  }
+
+  function startRealCoder(skipCountdown) {
+    const raw = document.getElementById('raw-code').value;
+    if (!raw.trim()) return;
+
+    const chosenTheme = document.getElementById('theme-select').value;
+    applyEditorTheme(chosenTheme);
+
+    const files = splitCodeIntoFiles(raw);
+    const baseSpeed = parseInt(document.getElementById('speed').value, 10);
+
+    fileState = { html: '', css: '', js: '' };
+
+    const stages = [];
+    if (files.html) stages.push({ type: 'html', content: files.html });
+    if (files.css)  stages.push({ type: 'css',  content: files.css });
+    if (files.js)   stages.push({ type: 'js',   content: files.js });
+
+    clearTimeout(timer);
+    isTyping = true;
+    setActiveTabUI(stages[0].type);
+    renderCodeLines('', '', stages[0].type, true);
+    renderLiveStage('', '', '');
+    setupModal.classList.add('hidden');
+
+    if (skipCountdown) {
+      runStages(stages, baseSpeed);
+      return;
+    }
+
+    let c = 3;
+    countdown.textContent = c;
+    countdown.classList.add('show');
+
+    const cInt = setInterval(() => {
+      c--;
+      if (c > 0) {
+        countdown.textContent = c;
+      } else {
+        clearInterval(cInt);
+        countdown.classList.remove('show');
+        runStages(stages, baseSpeed);
+      }
+    }, 800);
+  }
+
+  function runStages(stages, baseSpeed) {
+    let stageIdx = 0;
+    let charIdx = 0;
+    const step = baseSpeed <= 2 ? 4 : (baseSpeed <= 6 ? 2 : 1);
+
+    function typeStep() {
+      const currentStage = stages[stageIdx];
+      setActiveTabUI(currentStage.type);
+
+      charIdx += step;
+      if (charIdx > currentStage.content.length) {
+        charIdx = currentStage.content.length;
+      }
+
+      const slice = currentStage.content.slice(0, charIdx);
+      fileState[currentStage.type] = slice;
+
+      let autoSuffix = '';
+      if (currentStage.type === 'html' && charIdx < currentStage.content.length) {
+        const rawSuffix = computeAutoClosedSuffix(slice);
+        if (rawSuffix) {
+          autoSuffix = '\n' + rawSuffix;
+        }
+      }
+
+      renderCodeLines(slice, autoSuffix, currentStage.type, true);
+
+      const lastChar = slice.slice(-1);
+      if (lastChar === '>' || lastChar === '}' || lastChar === '\n' || charIdx === currentStage.content.length) {
+        const curHtml = fileState.html + (currentStage.type === 'html' ? autoSuffix : '');
+        const curCss  = fileState.css;
+        const curJs   = (currentStage.type === 'js' && charIdx === currentStage.content.length) ? slice : (stageIdx > 2 ? fileState.js : '');
+        renderLiveStage(curHtml, curCss, curJs);
+      }
+
+      if (charIdx < currentStage.content.length) {
+        let delay = baseSpeed;
+        if (baseSpeed >= 15) {
+          delay = baseSpeed + (Math.random() * 14 - 5);
+          if (lastChar === '\n') delay += 40;
+        }
+        timer = setTimeout(typeStep, Math.max(1, delay));
+      } else {
+        fileState[currentStage.type] = currentStage.content;
+        renderCodeLines(currentStage.content, '', currentStage.type, false);
+
+        if (stageIdx + 1 < stages.length) {
+          stageIdx++;
+          charIdx = 0;
+          timer = setTimeout(typeStep, 650);
+        } else {
+          isTyping = false;
+          renderLiveStage(fileState.html, fileState.css, fileState.js);
+        }
+      }
+    }
+
+    typeStep();
+  }
+
+  renderCodeLines('', '', 'html', false);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      clearTimeout(timer);
+      isTyping = false;
+      mergeModal.classList.add('hidden');
+      setupModal.classList.remove('hidden');
+    }
+  });
+</script>
+</body>
+</html>
