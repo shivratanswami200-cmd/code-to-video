@@ -31,7 +31,6 @@
     flex-direction: column;
   }
 
-  /* Main Workspace above Windows Taskbar */
   #workspace {
     display: flex;
     width: 100vw;
@@ -39,7 +38,6 @@
     overflow: hidden;
   }
 
-  /* Left Side: Full Realistic VS Code Window */
   #vscode-pane {
     width: 48%;
     height: 100%;
@@ -50,7 +48,6 @@
     transition: background 0.25s ease;
   }
 
-  /* Top VS Code Menu Bar */
   .vscode-menubar {
     height: 30px;
     background: var(--ed-menubar);
@@ -82,7 +79,6 @@
     color: #ffffff;
   }
 
-  /* Body below Menu Bar */
   .vscode-body {
     flex: 1;
     display: flex;
@@ -90,7 +86,6 @@
     overflow: hidden;
   }
 
-  /* Left Activity Bar */
   .activity-bar {
     width: 48px;
     background: var(--ed-activity);
@@ -122,13 +117,8 @@
     transition: opacity 0.15s;
   }
 
-  .act-btn:hover {
-    opacity: 0.95;
-  }
-
-  .act-btn.active {
-    opacity: 1;
-  }
+  .act-btn:hover { opacity: 0.95; }
+  .act-btn.active { opacity: 1; }
 
   .act-btn.active::before {
     content: '';
@@ -146,7 +136,6 @@
     fill: #ffffff;
   }
 
-  /* Collapsible Side Drawer */
   #side-drawer {
     width: 0;
     background: var(--ed-sidebar);
@@ -158,9 +147,7 @@
     flex-shrink: 0;
   }
 
-  #side-drawer.open {
-    width: 195px;
-  }
+  #side-drawer.open { width: 195px; }
 
   .drawer-header {
     padding: 10px 14px;
@@ -181,14 +168,8 @@
     gap: 8px;
   }
 
-  .drawer-item:hover {
-    background: rgba(255, 255, 255, 0.06);
-  }
-
-  .drawer-item.active-file {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-  }
+  .drawer-item:hover { background: rgba(255, 255, 255, 0.06); }
+  .drawer-item.active-file { background: rgba(255, 255, 255, 0.12); color: #ffffff; }
 
   .merge-ext-btn {
     margin: 10px 12px;
@@ -202,14 +183,9 @@
     cursor: pointer;
     text-align: center;
   }
-  .merge-ext-btn:hover {
-    background: #1177bb;
-  }
+  .merge-ext-btn:hover { background: #1177bb; }
 
-  .search-box-wrap {
-    padding: 8px 12px;
-  }
-
+  .search-box-wrap { padding: 8px 12px; }
   .search-input {
     width: 100%;
     background: #3c3c3c;
@@ -227,7 +203,6 @@
     overflow-y: auto;
   }
 
-  /* Main Editor Column */
   .editor-column {
     flex: 1;
     display: flex;
@@ -237,7 +212,6 @@
     background: var(--ed-bg);
   }
 
-  /* VS Code File Tabs Bar */
   .tabs-bar {
     height: 35px;
     background: var(--ed-sidebar);
@@ -260,11 +234,7 @@
     cursor: pointer;
   }
 
-  .tab:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #dddddd;
-  }
-
+  .tab:hover { background: rgba(255, 255, 255, 0.05); color: #dddddd; }
   .tab.active {
     background: var(--ed-bg);
     color: #ffffff;
@@ -275,7 +245,6 @@
   .icon-css  { color: #2965f1; font-weight: bold; font-size: 11px; }
   .icon-js   { color: #f7df1e; font-weight: bold; font-size: 11px; }
 
-  /* Breadcrumb bar */
   .breadcrumb-bar {
     height: 22px;
     background: var(--ed-bg);
@@ -289,7 +258,6 @@
     flex-shrink: 0;
   }
 
-  /* Editor Scroll & Continuous Vertical + Faint Horizontal Lines */
   #editor-scroll {
     flex: 1;
     height: 100%;
@@ -301,12 +269,8 @@
     scroll-behavior: smooth;
   }
 
-  #editor-scroll::-webkit-scrollbar {
-    width: 8px;
-  }
-  #editor-scroll::-webkit-scrollbar-thumb {
-    background: rgba(121, 121, 121, 0.35);
-  }
+  #editor-scroll::-webkit-scrollbar { width: 8px; }
+  #editor-scroll::-webkit-scrollbar-thumb { background: rgba(121, 121, 121, 0.35); }
 
   .code-line-row {
     display: flex;
@@ -330,9 +294,7 @@
     flex-shrink: 0;
   }
 
-  .code-line-row.active-line .gutter-num {
-    color: #c6c6c6;
-  }
+  .code-line-row.active-line .gutter-num { color: #c6c6c6; }
 
   .indent-guides {
     display: inline-flex;
@@ -349,9 +311,7 @@
     margin-bottom: -1px;
   }
 
-  .indent-unit.active-guide {
-    border-left: 1px solid rgba(255, 255, 255, 0.34);
-  }
+  .indent-unit.active-guide { border-left: 1px solid rgba(255, 255, 255, 0.34); }
 
   .line-content {
     flex: 1;
@@ -360,7 +320,6 @@
     color: #d4d4d4;
   }
 
-  /* Blinking Cursor */
   .cursor {
     display: inline-block;
     width: 2px;
@@ -375,7 +334,6 @@
     50%, 100% { opacity: 0; }
   }
 
-  /* Rich VS Code Dark+ Syntax Colors */
   .vs-bracket { color: #808080; }
   .vs-tag     { color: #569cd6; }
   .vs-attr    { color: #9cdcfe; }
@@ -391,11 +349,10 @@
   .vs-var     { color: #9cdcfe; }
   .vs-punc    { color: #ffd700; }
 
-  /* Right Side: Live Interactive Preview */
   #preview-pane {
     flex: 1;
     height: 100%;
-    background: #000000;
+    background: #0d1117;
     position: relative;
   }
 
@@ -403,10 +360,10 @@
     width: 100%;
     height: 100%;
     border: none;
+    display: block;
     pointer-events: auto;
   }
 
-  /* Stealth Replay Button */
   #stealth-controls {
     position: absolute;
     bottom: 14px;
@@ -416,9 +373,7 @@
     z-index: 20;
   }
 
-  #preview-pane:hover #stealth-controls {
-    opacity: 0.85;
-  }
+  #preview-pane:hover #stealth-controls { opacity: 0.85; }
 
   .stealth-btn {
     background: rgba(37, 37, 38, 0.85);
@@ -433,12 +388,8 @@
     align-items: center;
     justify-content: center;
   }
-  .stealth-btn:hover {
-    background: #0e639c;
-    color: #ffffff;
-  }
+  .stealth-btn:hover { background: #0e639c; color: #ffffff; }
 
-  /* Realistic Windows 11 Bottom Taskbar (Shifted Left + Extended App & Tray Icons) */
   .win-taskbar {
     height: 44px;
     width: 100vw;
@@ -453,26 +404,9 @@
     z-index: 50;
   }
 
-  .tb-left-group {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-  }
-
-  .tb-weather {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 12px;
-    color: #e0e0e0;
-    padding-right: 10px;
-  }
-
-  .tb-apps {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+  .tb-left-group { display: flex; align-items: center; gap: 18px; }
+  .tb-weather { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #e0e0e0; padding-right: 10px; }
+  .tb-apps { display: flex; align-items: center; gap: 5px; }
 
   .tb-icon-btn {
     width: 35px;
@@ -484,15 +418,8 @@
     position: relative;
     transition: background 0.15s;
   }
-
-  .tb-icon-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .tb-icon-btn.app-open {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
+  .tb-icon-btn:hover { background: rgba(255, 255, 255, 0.08); }
+  .tb-icon-btn.app-open { background: rgba(255, 255, 255, 0.05); }
   .tb-icon-btn.app-open::after {
     content: '';
     position: absolute;
@@ -502,11 +429,7 @@
     border-radius: 2px;
     background: #8a8a8e;
   }
-
-  .tb-icon-btn.app-focused {
-    background: rgba(255, 255, 255, 0.1);
-  }
-
+  .tb-icon-btn.app-focused { background: rgba(255, 255, 255, 0.1); }
   .tb-icon-btn.app-focused::after {
     content: '';
     position: absolute;
@@ -531,14 +454,7 @@
     font-size: 12px;
   }
 
-  .tb-right {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    font-size: 11.5px;
-    color: #e0e0e0;
-  }
-
+  .tb-right { display: flex; align-items: center; gap: 11px; font-size: 11.5px; color: #e0e0e0; }
   .rec-pill {
     display: flex;
     align-items: center;
@@ -550,7 +466,6 @@
     font-size: 10.5px;
     color: #fca5a5;
   }
-
   .rec-dot {
     width: 7px;
     height: 7px;
@@ -558,13 +473,8 @@
     background: #ef4444;
     animation: recPulse 1.2s infinite;
   }
+  @keyframes recPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-  @keyframes recPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.35; }
-  }
-
-  /* Setup & Export Modals */
   .overlay-modal {
     position: fixed;
     inset: 0;
@@ -575,12 +485,7 @@
     justify-content: center;
     transition: opacity 0.3s ease, visibility 0.3s ease;
   }
-
-  .overlay-modal.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
+  .overlay-modal.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
   .modal-box {
     width: 90%;
@@ -591,24 +496,9 @@
     padding: 24px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.85);
   }
-
-  .modal-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-  }
-
-  .modal-box h2 {
-    font-size: 18px;
-    color: #fff;
-  }
-
-  .modal-box p {
-    font-size: 13px;
-    color: #aaaaaa;
-    margin-bottom: 14px;
-  }
+  .modal-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .modal-box h2 { font-size: 18px; color: #fff; }
+  .modal-box p { font-size: 13px; color: #aaaaaa; margin-bottom: 14px; }
 
   .ai-prompt-btn {
     background: #2d2d30;
@@ -623,10 +513,7 @@
     align-items: center;
     gap: 6px;
   }
-  .ai-prompt-btn:hover {
-    background: #238636;
-    color: #ffffff;
-  }
+  .ai-prompt-btn:hover { background: #238636; color: #ffffff; }
 
   .code-textarea {
     width: 100%;
@@ -643,20 +530,8 @@
     margin-bottom: 16px;
   }
 
-  .modal-footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .modal-options-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px;
-  }
+  .modal-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+  .modal-options-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
 
   select {
     background: #1e1e1e;
@@ -677,9 +552,7 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  .start-btn:hover {
-    background: #1177bb;
-  }
+  .start-btn:hover { background: #1177bb; }
 
   .sec-btn {
     background: #3c3c3c;
@@ -690,9 +563,7 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  .sec-btn:hover {
-    background: #4b4b4b;
-  }
+  .sec-btn:hover { background: #4b4b4b; }
 
   #countdown {
     position: fixed;
@@ -714,9 +585,7 @@
 <body>
 
   <div id="workspace">
-    <!-- Left: Full Authentic VS Code -->
     <div id="vscode-pane">
-      <!-- Top Menu Bar -->
       <div class="vscode-menubar">
         <svg class="vscode-logo" viewBox="0 0 24 24">
           <path fill="#007acc" d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
@@ -732,7 +601,6 @@
       </div>
 
       <div class="vscode-body">
-        <!-- Activity Bar -->
         <div class="activity-bar">
           <div class="act-top">
             <div class="act-btn" id="btn-explorer" title="Explorer" onclick="toggleDrawer('explorer')">
@@ -762,12 +630,10 @@
           </div>
         </div>
 
-        <!-- Collapsible Side Drawer -->
         <div id="side-drawer">
           <div id="drawer-content"></div>
         </div>
 
-        <!-- Main Code Column -->
         <div class="editor-column">
           <div class="tabs-bar">
             <div class="tab active" id="tab-html" onclick="switchTabManually('html')"><span class="icon-html">&lt;&gt;</span> index.html</div>
@@ -781,19 +647,16 @@
       </div>
     </div>
 
-    <!-- Right: Live Interactive Preview -->
     <div id="preview-pane">
-      <iframe id="live-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+      <iframe id="live-frame"></iframe>
       <div id="stealth-controls">
         <button class="stealth-btn" title="Replay Typing" onclick="startRealCoder(false)">↻</button>
       </div>
     </div>
   </div>
 
-  <!-- Windows 11 Taskbar (Shifted Left + YouTube, Notepad, Notepad++, Wi-Fi, Recording & Notification Icons) -->
   <div class="win-taskbar">
     <div class="tb-left-group">
-      <!-- Weather -->
       <div class="tb-weather">
         <span style="font-size:15px;">⛅</span>
         <div>
@@ -802,22 +665,18 @@
         </div>
       </div>
 
-      <!-- Apps & Search shifted slightly toward left -->
       <div class="tb-apps">
-        <!-- Windows 11 Start -->
         <div class="tb-icon-btn" title="Start">
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path fill="#00a4ef" d="M2 2h9.5v9.5H2V2zm10.5 0H22v9.5h-9.5V2zM2 12.5h9.5V22H2v-9.5zm10.5 0H22V22h-9.5v-9.5z"/>
           </svg>
         </div>
 
-        <!-- Search Pill -->
         <div class="tb-search-pill">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#b8b8b8"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
           <span>Search</span>
         </div>
 
-        <!-- Task View -->
         <div class="tb-icon-btn" title="Task View">
           <svg width="18" height="18" viewBox="0 0 24 24">
             <rect x="2" y="4" width="12" height="14" rx="2" fill="#4f545c" stroke="#c8c8c8" stroke-width="1.5"/>
@@ -825,7 +684,6 @@
           </svg>
         </div>
 
-        <!-- File Explorer -->
         <div class="tb-icon-btn app-open" title="File Explorer">
           <svg width="20" height="20" viewBox="0 0 24 24">
             <path fill="#f7c548" d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
@@ -833,7 +691,6 @@
           </svg>
         </div>
 
-        <!-- Microsoft Store -->
         <div class="tb-icon-btn" title="Microsoft Store">
           <svg width="20" height="20" viewBox="0 0 24 24">
             <path fill="#e1e1e1" d="M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2z"/>
@@ -844,7 +701,6 @@
           </svg>
         </div>
 
-        <!-- Google Chrome -->
         <div class="tb-icon-btn app-open" title="Google Chrome">
           <svg width="20" height="20" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" fill="#4caf50"/>
@@ -854,14 +710,12 @@
           </svg>
         </div>
 
-        <!-- Visual Studio Code (Active Focused Window) -->
         <div class="tb-icon-btn app-focused" title="Visual Studio Code">
           <svg width="19" height="19" viewBox="0 0 24 24">
             <path fill="#007acc" d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
           </svg>
         </div>
 
-        <!-- Microsoft Edge -->
         <div class="tb-icon-btn app-open" title="Microsoft Edge">
           <svg width="20" height="20" viewBox="0 0 24 24">
             <defs>
@@ -876,7 +730,6 @@
           </svg>
         </div>
 
-        <!-- Spotify -->
         <div class="tb-icon-btn app-open" title="Spotify">
           <svg width="20" height="20" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" fill="#1db954"/>
@@ -884,7 +737,6 @@
           </svg>
         </div>
 
-        <!-- YouTube App Icon -->
         <div class="tb-icon-btn app-open" title="YouTube">
           <svg width="21" height="21" viewBox="0 0 24 24">
             <rect x="2" y="5" width="20" height="14" rx="4" fill="#ff0000"/>
@@ -892,7 +744,6 @@
           </svg>
         </div>
 
-        <!-- Windows Notepad Icon -->
         <div class="tb-icon-btn" title="Notepad">
           <svg width="19" height="19" viewBox="0 0 24 24">
             <rect x="4" y="3" width="16" height="18" rx="2" fill="#38bdf8"/>
@@ -903,7 +754,6 @@
           </svg>
         </div>
 
-        <!-- Notepad++ Icon -->
         <div class="tb-icon-btn app-open" title="Notepad++">
           <svg width="20" height="20" viewBox="0 0 24 24">
             <rect x="3" y="3" width="16" height="18" rx="2" fill="#84cc16"/>
@@ -915,9 +765,7 @@
       </div>
     </div>
 
-    <!-- System Tray: Screen Recording + Wi-Fi + Volume + Notification Bell + Clock -->
     <div class="tb-right">
-      <!-- Active Screen Recording Indicator -->
       <div class="rec-pill" title="Screen Recording Active">
         <span class="rec-dot"></span>
         <span>REC</span>
@@ -925,17 +773,14 @@
 
       <span>ENG</span>
 
-      <!-- Wi-Fi Icon -->
       <svg width="15" height="15" viewBox="0 0 24 24" fill="#e0e0e0" title="Wi-Fi Connected">
         <path d="M12 18c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4.9-2.3l1.4 1.4C9.4 16.4 10.6 16 12 16s2.6.4 3.5 1.1l1.4-1.4C15.6 14.6 13.9 14 12 14s-3.6.6-4.9 1.7zm-2.8-2.8l1.4 1.4C7.3 13 9.5 12 12 12s4.7 1 6.3 2.3l1.4-1.4C17.7 11.1 15 10 12 10s-5.7 1.1-7.7 2.9zM1.5 10.1l1.4 1.4C5.3 9.3 8.5 8 12 8s6.7 1.3 9.1 3.5l1.4-1.4C19.7 7.5 16 6 12 6S4.3 7.5 1.5 10.1z"/>
       </svg>
 
-      <!-- Speaker Volume Icon -->
       <svg width="15" height="15" viewBox="0 0 24 24" fill="#e0e0e0" title="Volume">
         <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
       </svg>
 
-      <!-- Notification Bell Icon -->
       <div style="position:relative; display:flex; align-items:center;" title="Notifications">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="#e0e0e0">
           <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
@@ -943,9 +788,8 @@
         <span style="position:absolute; top:-2px; right:-2px; width:6px; height:6px; border-radius:50%; background:#60cdff;"></span>
       </div>
 
-      <!-- Clock & Date -->
       <div style="text-align:right; line-height:1.15;">
-        <div id="tb-clock">01:25 PM</div>
+        <div id="tb-clock">01:52 PM</div>
         <div style="font-size:10px; color:#b0b0b0;">25-11-2026</div>
       </div>
     </div>
@@ -953,7 +797,6 @@
 
   <div id="countdown">3</div>
 
-  <!-- Paste Modal with Editor Background Theme Selector & AI Prompt Button -->
   <div id="setup-modal" class="overlay-modal">
     <div class="modal-box">
       <div class="modal-header-row">
@@ -961,56 +804,7 @@
         <button class="ai-prompt-btn" id="copy-ai-prompt-btn" onclick="copyAIPrompt()">📋 Copy AI Prompt for New Chat</button>
       </div>
       <p>कोड अपने-आप <b>index.html</b>, <b>style.css</b>, और <b>script.js</b> में बंट जाएगा। मर्ज कोड निकालने के लिए बाईं तरफ <b>Extensions</b> आइकन पर क्लिक करें।</p>
-      <textarea id="raw-code" class="code-textarea" placeholder="Paste your clean HTML/CSS/JS code here..."><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Interactive Glow Button</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #090d16;
-      font-family: sans-serif;
-    }
-    .glow-btn {
-      padding: 18px 42px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #00f2fe;
-      background: transparent;
-      border: 2px solid #00f2fe;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
-      transition: all 0.3s ease;
-    }
-    .glow-btn:hover {
-      background: #00f2fe;
-      color: #090d16;
-      box-shadow: 0 0 45px #00f2fe;
-    }
-  </style>
-</head>
-<body>
-  <div class="wrapper">
-    <button class="glow-btn" id="actionBtn">CLICK ME</button>
-  </div>
-  <script>
-    const btn = document.getElementById('actionBtn');
-    let active = false;
-    btn.addEventListener('click', () => {
-      active = !active;
-      btn.textContent = active ? 'ACTIVATED!' : 'CLICK ME';
-      btn.style.borderColor = active ? '#ff007f' : '#00f2fe';
-      btn.style.color = active ? '#ff007f' : '#00f2fe';
-    });
-  </script>
-</body>
-</html></textarea>
+      <textarea id="raw-code" class="code-textarea" placeholder="Paste your clean HTML/CSS/JS code here..."></textarea>
       <div class="modal-footer">
         <div class="modal-options-wrap">
           <div>
@@ -1039,7 +833,6 @@
     </div>
   </div>
 
-  <!-- Merged Code Output Modal -->
   <div id="merge-modal" class="overlay-modal hidden">
     <div class="modal-box">
       <h2>Merged Ready-to-Record HTML Code</h2>
@@ -1070,49 +863,16 @@
   let currentDrawer = null;
   let isTyping = false;
 
-  let fileState = {
-    html: '',
-    css: '',
-    js: ''
-  };
+  let fileState = { html: '', css: '', js: '' };
   let activeTab = 'html';
 
   const VOID_TAGS = new Set(['meta', 'link', 'img', 'br', 'hr', 'input', 'source', 'area', 'base', 'col', 'embed', 'param', 'track', 'wbr']);
 
-  // VS Code Background Themes
   const EDITOR_THEMES = {
-    grey: {
-      bg: '#1e1e1e',
-      sidebar: '#252526',
-      activity: '#333333',
-      menubar: '#323233',
-      tabInactive: '#2d2d2d',
-      border: '#2b2b2b'
-    },
-    black: {
-      bg: '#0a0a0d',
-      sidebar: '#111116',
-      activity: '#16161d',
-      menubar: '#14141a',
-      tabInactive: '#131318',
-      border: '#1f1f26'
-    },
-    blue: {
-      bg: '#0f172a',
-      sidebar: '#162038',
-      activity: '#1b2744',
-      menubar: '#18233d',
-      tabInactive: '#17223b',
-      border: '#243356'
-    },
-    purple: {
-      bg: '#19112b',
-      sidebar: '#22173b',
-      activity: '#291c47',
-      menubar: '#251940',
-      tabInactive: '#23183d',
-      border: '#352559'
-    }
+    grey: { bg: '#1e1e1e', sidebar: '#252526', activity: '#333333', menubar: '#323233', tabInactive: '#2d2d2d', border: '#2b2b2b' },
+    black: { bg: '#0a0a0d', sidebar: '#111116', activity: '#16161d', menubar: '#14141a', tabInactive: '#131318', border: '#1f1f26' },
+    blue: { bg: '#0f172a', sidebar: '#162038', activity: '#1b2744', menubar: '#18233d', tabInactive: '#17223b', border: '#243356' },
+    purple: { bg: '#19112b', sidebar: '#22173b', activity: '#291c47', menubar: '#251940', tabInactive: '#23183d', border: '#352559' }
   };
 
   function applyEditorTheme(themeKey) {
@@ -1136,28 +896,24 @@
   function copyAIPrompt() {
     const promptText = `Mujhe ek visual HTML/CSS/JS animation project ka single-file HTML code bana kar do. In strict rules ko follow karna:
 1. Code mein koi bhi descriptive comments (jaise "makdi ka jala", "step 1", "glowing effect" ya koi Hindi/English explanation comments) bilkul mat dalna. Sirf pure working code likhna.
-2. HTML structure <body> mein, saari CSS ek single <style> tag mein, aur saari JavaScript ek single <script> tag mein saaf-suthri alag-alag rakhna taaki unhe index.html, style.css aur script.js mein split kiya ja sake.
-3. Code lightweight, compact aur fast-rendering rakhna (faltu lambi lines ya heavy libraries mat dalna), aur proper 2-space indentation use karna.
-4. Animation 100% viewport (100vw x 100vh) ke center mein visually attractive aur smooth chalna chahiye.`;
+2. Agar animation HTML + CSS elements (jaise clock dial, numbers, hands, shapes) se ban sakta hai to unhe alag-alag <div> elements mein banana taaki live preview mein step-by-step banta dikhe.
+3. HTML structure <body> mein, saari CSS ek single <style> tag mein, aur saari JavaScript ek single <script> tag mein saaf-suthri alag-alag rakhna taaki unhe index.html, style.css aur script.js mein split kiya ja sake.
+4. Code lightweight, compact aur fast-rendering rakhna aur proper 2-space indentation use karna.`;
 
     navigator.clipboard.writeText(promptText).then(() => {
       const btn = document.getElementById('copy-ai-prompt-btn');
       btn.textContent = '✓ AI Prompt Copied!';
-      setTimeout(() => {
-        btn.textContent = '📋 Copy AI Prompt for New Chat';
-      }, 2500);
+      setTimeout(() => { btn.textContent = '📋 Copy AI Prompt for New Chat'; }, 2500);
     });
   }
 
   function toggleDrawer(type) {
     document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
-
     if (currentDrawer === type && sideDrawer.classList.contains('open')) {
       sideDrawer.classList.remove('open');
       currentDrawer = null;
       return;
     }
-
     currentDrawer = type;
     document.getElementById('btn-' + type).classList.add('active');
     sideDrawer.classList.add('open');
@@ -1178,30 +934,15 @@
         <div class="search-results" id="search-results">Type to search...</div>
       `;
     } else if (type === 'git') {
-      drawerContent.innerHTML = `
-        <div class="drawer-header">Source Control</div>
-        <div style="padding:10px 14px; font-size:12px; color:#999;">main branch • 3 files tracked</div>
-      `;
+      drawerContent.innerHTML = `<div class="drawer-header">Source Control</div><div style="padding:10px 14px; font-size:12px; color:#999;">main branch • 3 files tracked</div>`;
     } else if (type === 'debug') {
-      drawerContent.innerHTML = `
-        <div class="drawer-header">Run and Debug</div>
-        <div style="padding:10px 14px; font-size:12px; color:#999;">Chrome Live Preview Active</div>
-      `;
+      drawerContent.innerHTML = `<div class="drawer-header">Run and Debug</div><div style="padding:10px 14px; font-size:12px; color:#999;">Chrome Live Preview Active</div>`;
     } else if (type === 'ext') {
       drawerContent.innerHTML = `
         <div class="drawer-header">Extensions</div>
-        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
-          <strong style="color:#fff; font-size:12.5px;">Live Server</strong>
-          <span style="font-size:11px; color:#858585;">Ritwick Dey • Active</span>
-        </div>
-        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
-          <strong style="color:#fff; font-size:12.5px;">Auto Close Tag</strong>
-          <span style="font-size:11px; color:#858585;">Jun Han • Enabled</span>
-        </div>
-        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
-          <strong style="color:#fff; font-size:12.5px;">Prettier</strong>
-          <span style="font-size:11px; color:#858585;">Code Formatter</span>
-        </div>
+        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;"><strong style="color:#fff; font-size:12.5px;">Live Server</strong><span style="font-size:11px; color:#858585;">Ritwick Dey • Active</span></div>
+        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;"><strong style="color:#fff; font-size:12.5px;">Auto Close Tag</strong><span style="font-size:11px; color:#858585;">Jun Han • Enabled</span></div>
+        <div class="drawer-item" style="flex-direction:column; align-items:flex-start; gap:2px;"><strong style="color:#fff; font-size:12.5px;">Prettier</strong><span style="font-size:11px; color:#858585;">Code Formatter</span></div>
         <button class="merge-ext-btn" onclick="openMergedCodeModal()">Export Merged Code</button>
       `;
     }
@@ -1249,9 +990,7 @@
     mergeModal.classList.remove('hidden');
   }
 
-  function closeMergeModal() {
-    mergeModal.classList.add('hidden');
-  }
+  function closeMergeModal() { mergeModal.classList.add('hidden'); }
 
   function copyMergedCode() {
     const out = document.getElementById('merged-output');
@@ -1262,10 +1001,7 @@
 
   function runCodeSearch(query) {
     const resEl = document.getElementById('search-results');
-    if (!query.trim()) {
-      resEl.textContent = 'Type to search...';
-      return;
-    }
+    if (!query.trim()) { resEl.textContent = 'Type to search...'; return; }
     const q = query.toLowerCase();
     let matches = [];
     ['html', 'css', 'js'].forEach(f => {
@@ -1309,21 +1045,9 @@
     tabCss.classList.remove('active');
     tabJs.classList.remove('active');
 
-    if (type === 'html') {
-      tabHtml.classList.add('active');
-      breadcrumb.innerHTML = 'project &gt; index.html';
-    } else if (type === 'css') {
-      tabCss.classList.add('active');
-      breadcrumb.innerHTML = 'project &gt; style.css';
-    } else if (type === 'js') {
-      tabJs.classList.add('active');
-      breadcrumb.innerHTML = 'project &gt; script.js';
-    }
-
-    if (currentDrawer === 'explorer') {
-      toggleDrawer('explorer');
-      toggleDrawer('explorer');
-    }
+    if (type === 'html') { tabHtml.classList.add('active'); breadcrumb.innerHTML = 'project &gt; index.html'; }
+    else if (type === 'css') { tabCss.classList.add('active'); breadcrumb.innerHTML = 'project &gt; style.css'; }
+    else if (type === 'js') { tabJs.classList.add('active'); breadcrumb.innerHTML = 'project &gt; script.js'; }
   }
 
   function switchTabManually(type) {
@@ -1332,10 +1056,7 @@
   }
 
   function highlightLine(line, type) {
-    let escaped = line
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+    let escaped = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
     if (type === 'html') {
       return escaped.replace(/(&lt;!--[\s\S]*?--&gt;)|(&lt;\/?)([a-zA-Z0-9\-]+)(.*?)(&gt;)/g, function(m, comment, open, tag, attrs, close) {
@@ -1350,9 +1071,7 @@
       if (escaped.includes('{') && !escaped.includes(':')) {
         return escaped.replace(/^([^{]+)(\{)/, '<span class="vs-sel">$1</span><span class="vs-punc">$2</span>');
       }
-      if (escaped.trim() === '}') {
-        return escaped.replace('}', '<span class="vs-punc">}</span>');
-      }
+      if (escaped.trim() === '}') return escaped.replace('}', '<span class="vs-punc">}</span>');
       return escaped.replace(/^(\s*)([a-zA-Z\-]+)(\s*:\s*)([^;]+)(;?)/, function(m, sp, prop, col, val, semi) {
         let coloredVal = val.replace(/\b(\d+(?:\.\d+)?(?:px|vh|vw|%|s|ms|deg|em|rem)?)\b/g, '<span class="vs-num">$1</span>');
         coloredVal = coloredVal.replace(/(#[0-9a-fA-F]{3,8})/g, '<span class="vs-str">$1</span>');
@@ -1374,7 +1093,6 @@
         return match;
       });
     }
-
     return escaped;
   }
 
@@ -1385,13 +1103,9 @@
     while ((match = tagRegex.exec(typedSoFar)) !== null) {
       const fullTag = match[0];
       const tagName = match[1].toLowerCase();
-      if (fullTag.startsWith('<!') || fullTag.endsWith('/>') || VOID_TAGS.has(tagName)) {
-        continue;
-      }
+      if (fullTag.startsWith('<!') || fullTag.endsWith('/>') || VOID_TAGS.has(tagName)) continue;
       if (fullTag.startsWith('</')) {
-        if (stack.length > 0 && stack[stack.length - 1] === tagName) {
-          stack.pop();
-        }
+        if (stack.length > 0 && stack[stack.length - 1] === tagName) stack.pop();
       } else {
         stack.push(tagName);
       }
@@ -1406,9 +1120,7 @@
       levels[i] = m ? Math.floor(m[1].length / 2) : 0;
     }
     for (let i = 1; i < allLines.length - 1; i++) {
-      if (allLines[i].trim() === '') {
-        levels[i] = Math.min(levels[i - 1], levels[i + 1]);
-      }
+      if (allLines[i].trim() === '') levels[i] = Math.min(levels[i - 1], levels[i + 1]);
     }
     return levels;
   }
@@ -1467,35 +1179,34 @@
 
     if (showCursor) {
       const activeEl = editorScroll.querySelector('.active-line');
-      if (activeEl) {
-        activeEl.scrollIntoView({ block: 'nearest' });
-      }
+      if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
     }
   }
 
+  // FIXED: Uses srcdoc cleanly so Canvas & JS animations always render reliably without blocking
   function renderLiveStage(htmlStr, cssStr, jsStr) {
-    let combined = htmlStr;
+    let combined = htmlStr || '<!DOCTYPE html><html><head></head><body></body></html>';
     if (cssStr) {
-      const styleTag = `<style>${cssStr}</style>`;
+      const styleTag = '<style>' + cssStr + '</style>';
       if (combined.includes('<link rel="stylesheet" href="style.css">')) {
         combined = combined.replace('<link rel="stylesheet" href="style.css">', styleTag);
+      } else if (combined.includes('</head>')) {
+        combined = combined.replace('</head>', styleTag + '</head>');
       } else {
         combined = styleTag + combined;
       }
     }
     if (jsStr) {
-      const scriptTag = `<script>${jsStr}<\/script>`;
-      if (combined.includes('<script src="script.js"><\/script>')) {
-        combined = combined.replace('<script src="script.js"><\/script>', scriptTag);
+      const scriptTag = '<script>' + jsStr + '<' + '/script>';
+      if (combined.includes('<script src="script.js"><' + '/script>')) {
+        combined = combined.replace('<script src="script.js"><' + '/script>', scriptTag);
+      } else if (combined.includes('</body>')) {
+        combined = combined.replace('</body>', scriptTag + '</body>');
       } else {
         combined = combined + scriptTag;
       }
     }
-
-    const doc = liveFrame.contentDocument || liveFrame.contentWindow.document;
-    doc.open();
-    doc.write(combined);
-    doc.close();
+    liveFrame.srcdoc = combined;
   }
 
   function startRealCoder(skipCountdown) {
@@ -1553,9 +1264,7 @@
       setActiveTabUI(currentStage.type);
 
       charIdx += step;
-      if (charIdx > currentStage.content.length) {
-        charIdx = currentStage.content.length;
-      }
+      if (charIdx > currentStage.content.length) charIdx = currentStage.content.length;
 
       const slice = currentStage.content.slice(0, charIdx);
       fileState[currentStage.type] = slice;
@@ -1563,19 +1272,15 @@
       let autoSuffix = '';
       if (currentStage.type === 'html' && charIdx < currentStage.content.length) {
         const rawSuffix = computeAutoClosedSuffix(slice);
-        if (rawSuffix) {
-          autoSuffix = '\n' + rawSuffix;
-        }
+        if (rawSuffix) autoSuffix = '\n' + rawSuffix;
       }
 
       renderCodeLines(slice, autoSuffix, currentStage.type, true);
 
       const lastChar = slice.slice(-1);
-      if (lastChar === '>' || lastChar === '}' || lastChar === '\n' || charIdx === currentStage.content.length) {
+      if (currentStage.type !== 'js' && (lastChar === '>' || lastChar === '}' || lastChar === '\n' || charIdx === currentStage.content.length)) {
         const curHtml = fileState.html + (currentStage.type === 'html' ? autoSuffix : '');
-        const curCss  = fileState.css;
-        const curJs   = (currentStage.type === 'js' && charIdx === currentStage.content.length) ? slice : (stageIdx > 2 ? fileState.js : '');
-        renderLiveStage(curHtml, curCss, curJs);
+        renderLiveStage(curHtml, fileState.css, '');
       }
 
       if (charIdx < currentStage.content.length) {
