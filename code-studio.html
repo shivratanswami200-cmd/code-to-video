@@ -46,6 +46,7 @@
     display: flex;
     flex-direction: column;
     transition: background 0.25s ease;
+    position: relative;
   }
 
   .vscode-menubar {
@@ -210,6 +211,7 @@
     height: 100%;
     overflow: hidden;
     background: var(--ed-bg);
+    position: relative;
   }
 
   .tabs-bar {
@@ -262,11 +264,12 @@
     flex: 1;
     height: 100%;
     overflow-y: auto;
-    padding: 8px 14px 70px 0;
+    padding: 8px 14px 180px 0;
     font-family: 'Consolas', 'Courier New', monospace;
     font-size: 14.5px;
     line-height: 22px;
     scroll-behavior: smooth;
+    position: relative;
   }
 
   #editor-scroll::-webkit-scrollbar { width: 8px; }
@@ -334,6 +337,86 @@
     50%, 100% { opacity: 0; }
   }
 
+  /* Realistic VS Code IntelliSense Autocomplete Widget */
+  #intellisense-popup {
+    position: fixed;
+    min-width: 245px;
+    max-width: 310px;
+    background: #252526;
+    border: 1px solid #454545;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65);
+    z-index: 60;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12.5px;
+    display: none;
+    flex-direction: column;
+    border-radius: 3px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  #intellisense-popup.visible {
+    display: flex;
+  }
+
+  .is-row {
+    height: 22px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #cccccc;
+    gap: 10px;
+  }
+
+  .is-row.selected {
+    background: #04395e;
+    color: #ffffff;
+  }
+
+  .is-left {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .is-icon {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .is-icon.prop { background: rgba(117, 190, 255, 0.2); color: #75beff; border: 1px solid #75beff; }
+  .is-icon.tag  { background: rgba(238, 157, 40, 0.2); color: #ee9d28; border: 1px solid #ee9d28; }
+  .is-icon.file { background: rgba(137, 209, 133, 0.2); color: #89d185; border: 1px solid #89d185; }
+  .is-icon.kw   { background: rgba(197, 134, 192, 0.2); color: #c586c0; border: 1px solid #c586c0; }
+
+  .is-match {
+    color: #18a3ff;
+    font-weight: bold;
+  }
+  .is-row.selected .is-match {
+    color: #60cdff;
+  }
+
+  .is-type {
+    font-size: 10.5px;
+    color: #858585;
+    flex-shrink: 0;
+  }
+  .is-row.selected .is-type {
+    color: #bbbbbb;
+  }
+
+  /* Rich VS Code Dark+ Syntax Colors */
   .vs-bracket { color: #808080; }
   .vs-tag     { color: #569cd6; }
   .vs-attr    { color: #9cdcfe; }
@@ -645,6 +728,9 @@
           <div id="editor-scroll"></div>
         </div>
       </div>
+
+      <!-- VS Code IntelliSense Autocomplete Floating Popup -->
+      <div id="intellisense-popup"></div>
     </div>
 
     <div id="preview-pane">
@@ -789,7 +875,7 @@
       </div>
 
       <div style="text-align:right; line-height:1.15;">
-        <div id="tb-clock">01:52 PM</div>
+        <div id="tb-clock">03:32 PM</div>
         <div style="font-size:10px; color:#b0b0b0;">25-11-2026</div>
       </div>
     </div>
@@ -803,7 +889,7 @@
         <h2>Paste Your HTML Code</h2>
         <button class="ai-prompt-btn" id="copy-ai-prompt-btn" onclick="copyAIPrompt()">📋 Copy AI Prompt for New Chat</button>
       </div>
-      <p>कोड अपने-आप <b>index.html</b>, <b>style.css</b>, और <b>script.js</b> में बंट जाएगा। मर्ज कोड निकालने के लिए बाईं तरफ <b>Extensions</b> आइकन पर क्लिक करें।</p>
+      <p>कोड अपने-आप <b>index.html</b>, <b>style.css</b>, और <b>script.js</b> में बंट जाएगा। टाइपिंग के दौरान असली VS Code IntelliSense सुझाव भी दिखेंगे।</p>
       <textarea id="raw-code" class="code-textarea" placeholder="Paste your clean HTML/CSS/JS code here..."></textarea>
       <div class="modal-footer">
         <div class="modal-options-wrap">
@@ -836,7 +922,7 @@
   <div id="merge-modal" class="overlay-modal hidden">
     <div class="modal-box">
       <h2>Merged Ready-to-Record HTML Code</h2>
-      <p>इसमें VS Code थीम, Windows Taskbar और आपका एनिमेशन पहले से मर्ज है। इसे कॉपी करके सीधे अपने <b>4K रिकॉर्डिंग टूल</b> में डालें।</p>
+      <p>इसमें VS Code थीम, IntelliSense सुझाव, Windows Taskbar और आपका एनिमेशन पहले से मर्ज है। इसे कॉपी करके अपने <b>4K रिकॉर्डिंग टूल</b> में डालें।</p>
       <textarea id="merged-output" class="code-textarea" readonly></textarea>
       <div class="modal-footer">
         <button class="sec-btn" onclick="closeMergeModal()">Close</button>
@@ -854,6 +940,7 @@
   const breadcrumb = document.getElementById('breadcrumb');
   const sideDrawer = document.getElementById('side-drawer');
   const drawerContent = document.getElementById('drawer-content');
+  const isPopup = document.getElementById('intellisense-popup');
 
   const tabHtml = document.getElementById('tab-html');
   const tabCss = document.getElementById('tab-css');
@@ -867,6 +954,220 @@
   let activeTab = 'html';
 
   const VOID_TAGS = new Set(['meta', 'link', 'img', 'br', 'hr', 'input', 'source', 'area', 'base', 'col', 'embed', 'param', 'track', 'wbr']);
+
+  // Comprehensive VS Code IntelliSense Dictionaries (HTML Tags, ARIA & Attributes, File Paths, CSS, JS)
+  const IS_FILE_PATHS = [
+    { label: 'index.html', kind: 'file', type: 'HTML File' },
+    { label: 'style.css', kind: 'file', type: 'CSS Stylesheet' },
+    { label: 'script.js', kind: 'file', type: 'JavaScript' },
+    { label: 'click.mp3', kind: 'file', type: 'Audio Asset' },
+    { label: 'sound.mp3', kind: 'file', type: 'Audio Asset' }
+  ];
+
+  const IS_HTML_TAGS = [
+    { label: 'audio', kind: 'tag', type: 'Element' },
+    { label: 'article', kind: 'tag', type: 'Element' },
+    { label: 'aside', kind: 'tag', type: 'Element' },
+    { label: 'button', kind: 'tag', type: 'Element' },
+    { label: 'canvas', kind: 'tag', type: 'Element' },
+    { label: 'div', kind: 'tag', type: 'Element' },
+    { label: 'footer', kind: 'tag', type: 'Element' },
+    { label: 'form', kind: 'tag', type: 'Element' },
+    { label: 'header', kind: 'tag', type: 'Element' },
+    { label: 'iframe', kind: 'tag', type: 'Element' },
+    { label: 'img', kind: 'tag', type: 'Element' },
+    { label: 'input', kind: 'tag', type: 'Element' },
+    { label: 'label', kind: 'tag', type: 'Element' },
+    { label: 'link', kind: 'tag', type: 'Element' },
+    { label: 'main', kind: 'tag', type: 'Element' },
+    { label: 'meta', kind: 'tag', type: 'Element' },
+    { label: 'nav', kind: 'tag', type: 'Element' },
+    { label: 'script', kind: 'tag', type: 'Element' },
+    { label: 'section', kind: 'tag', type: 'Element' },
+    { label: 'span', kind: 'tag', type: 'Element' },
+    { label: 'style', kind: 'tag', type: 'Element' },
+    { label: 'svg', kind: 'tag', type: 'Element' },
+    { label: 'video', kind: 'tag', type: 'Element' }
+  ];
+
+  const IS_HTML_ATTRS = [
+    { label: 'autoplay', kind: 'prop', type: 'Attribute' },
+    { label: 'aria-autocomplete', kind: 'prop', type: 'ARIA' },
+    { label: 'aria-busy', kind: 'prop', type: 'ARIA' },
+    { label: 'aria-current', kind: 'prop', type: 'ARIA' },
+    { label: 'aria-multiline', kind: 'prop', type: 'ARIA' },
+    { label: 'aria-multiselectable', kind: 'prop', type: 'ARIA' },
+    { label: 'aria-valuetext', kind: 'prop', type: 'ARIA' },
+    { label: 'aria-valuenow', kind: 'prop', type: 'ARIA' },
+    { label: 'aria-hidden', kind: 'prop', type: 'ARIA' },
+    { label: 'aria-label', kind: 'prop', type: 'ARIA' },
+    { label: 'alt', kind: 'prop', type: 'Attribute' },
+    { label: 'class', kind: 'prop', type: 'Attribute' },
+    { label: 'charset', kind: 'prop', type: 'Attribute' },
+    { label: 'content', kind: 'prop', type: 'Attribute' },
+    { label: 'controls', kind: 'prop', type: 'Attribute' },
+    { label: 'data-val', kind: 'prop', type: 'Data Attr' },
+    { label: 'data-action', kind: 'prop', type: 'Data Attr' },
+    { label: 'disabled', kind: 'prop', type: 'Attribute' },
+    { label: 'href', kind: 'prop', type: 'Attribute' },
+    { label: 'id', kind: 'prop', type: 'Attribute' },
+    { label: 'lang', kind: 'prop', type: 'Attribute' },
+    { label: 'loop', kind: 'prop', type: 'Attribute' },
+    { label: 'muted', kind: 'prop', type: 'Attribute' },
+    { label: 'name', kind: 'prop', type: 'Attribute' },
+    { label: 'onclick', kind: 'prop', type: 'Event' },
+    { label: 'placeholder', kind: 'prop', type: 'Attribute' },
+    { label: 'preload', kind: 'prop', type: 'Attribute' },
+    { label: 'rel', kind: 'prop', type: 'Attribute' },
+    { label: 'role', kind: 'prop', type: 'Attribute' },
+    { label: 'src', kind: 'prop', type: 'Attribute' },
+    { label: 'style', kind: 'prop', type: 'Attribute' },
+    { label: 'tabindex', kind: 'prop', type: 'Attribute' },
+    { label: 'target', kind: 'prop', type: 'Attribute' },
+    { label: 'title', kind: 'prop', type: 'Attribute' },
+    { label: 'type', kind: 'prop', type: 'Attribute' },
+    { label: 'value', kind: 'prop', type: 'Attribute' }
+  ];
+
+  const IS_CSS_PROPS = [
+    { label: 'align-items', kind: 'prop', type: 'Property' },
+    { label: 'animation', kind: 'prop', type: 'Property' },
+    { label: 'backdrop-filter', kind: 'prop', type: 'Property' },
+    { label: 'background', kind: 'prop', type: 'Property' },
+    { label: 'background-color', kind: 'prop', type: 'Property' },
+    { label: 'border', kind: 'prop', type: 'Property' },
+    { label: 'border-radius', kind: 'prop', type: 'Property' },
+    { label: 'box-shadow', kind: 'prop', type: 'Property' },
+    { label: 'box-sizing', kind: 'prop', type: 'Property' },
+    { label: 'color', kind: 'prop', type: 'Property' },
+    { label: 'cursor', kind: 'prop', type: 'Property' },
+    { label: 'display', kind: 'prop', type: 'Property' },
+    { label: 'filter', kind: 'prop', type: 'Property' },
+    { label: 'flex-direction', kind: 'prop', type: 'Property' },
+    { label: 'font-family', kind: 'prop', type: 'Property' },
+    { label: 'font-size', kind: 'prop', type: 'Property' },
+    { label: 'font-weight', kind: 'prop', type: 'Property' },
+    { label: 'gap', kind: 'prop', type: 'Property' },
+    { label: 'grid-template-columns', kind: 'prop', type: 'Property' },
+    { label: 'height', kind: 'prop', type: 'Property' },
+    { label: 'justify-content', kind: 'prop', type: 'Property' },
+    { label: 'letter-spacing', kind: 'prop', type: 'Property' },
+    { label: 'margin', kind: 'prop', type: 'Property' },
+    { label: 'min-height', kind: 'prop', type: 'Property' },
+    { label: 'opacity', kind: 'prop', type: 'Property' },
+    { label: 'overflow', kind: 'prop', type: 'Property' },
+    { label: 'padding', kind: 'prop', type: 'Property' },
+    { label: 'position', kind: 'prop', type: 'Property' },
+    { label: 'text-shadow', kind: 'prop', type: 'Property' },
+    { label: 'transform', kind: 'prop', type: 'Property' },
+    { label: 'transition', kind: 'prop', type: 'Property' },
+    { label: 'width', kind: 'prop', type: 'Property' },
+    { label: 'z-index', kind: 'prop', type: 'Property' }
+  ];
+
+  const IS_JS_KEYWORDS = [
+    { label: 'addEventListener', kind: 'kw', type: 'Method' },
+    { label: 'const', kind: 'kw', type: 'Keyword' },
+    { label: 'classList', kind: 'prop', type: 'Property' },
+    { label: 'document', kind: 'prop', type: 'Global' },
+    { label: 'function', kind: 'kw', type: 'Keyword' },
+    { label: 'getElementById', kind: 'kw', type: 'Method' },
+    { label: 'innerHTML', kind: 'prop', type: 'Property' },
+    { label: 'querySelector', kind: 'kw', type: 'Method' },
+    { label: 'querySelectorAll', kind: 'kw', type: 'Method' },
+    { label: 'requestAnimationFrame', kind: 'kw', type: 'Method' },
+    { label: 'return', kind: 'kw', type: 'Keyword' },
+    { label: 'setInterval', kind: 'kw', type: 'Method' },
+    { label: 'setProperty', kind: 'kw', type: 'Method' },
+    { label: 'setTimeout', kind: 'kw', type: 'Method' },
+    { label: 'style', kind: 'prop', type: 'Property' },
+    { label: 'textContent', kind: 'prop', type: 'Property' },
+    { label: 'toggle', kind: 'kw', type: 'Method' },
+    { label: 'window', kind: 'prop', type: 'Global' }
+  ];
+
+  function updateIntelliSensePopup(typedSoFar, fileType) {
+    const lines = typedSoFar.split('\n');
+    const currentLine = lines[lines.length - 1];
+    let matches = [];
+    let queryPrefix = '';
+
+    if (fileType === 'html') {
+      // 1. Check if cursor is inside src="..." or href="..."
+      const pathMatch = currentLine.match(/(?:src|href)\s*=\s*["']([^"']*)$/i);
+      if (pathMatch) {
+        queryPrefix = pathMatch[1].toLowerCase();
+        matches = IS_FILE_PATHS.filter(item => item.label.toLowerCase().startsWith(queryPrefix));
+      } else {
+        // 2. Check if typing an HTML tag after '<'
+        const tagMatch = currentLine.match(/<([a-zA-Z]{1,12})$/);
+        if (tagMatch) {
+          queryPrefix = tagMatch[1].toLowerCase();
+          matches = IS_HTML_TAGS.filter(item => item.label.startsWith(queryPrefix));
+        } else {
+          // 3. Check if typing an attribute inside an open tag (e.g. <audio au... or aria-...)
+          const openTagPos = currentLine.lastIndexOf('<');
+          const closeTagPos = currentLine.lastIndexOf('>');
+          if (openTagPos > closeTagPos) {
+            const attrMatch = currentLine.match(/\s([a-zA-Z\-]{1,18})$/);
+            if (attrMatch) {
+              queryPrefix = attrMatch[1].toLowerCase();
+              matches = IS_HTML_ATTRS.filter(item => item.label.startsWith(queryPrefix));
+            }
+          }
+        }
+      }
+    } else if (fileType === 'css') {
+      const propMatch = currentLine.match(/^\s*([a-zA-Z\-]{2,20})$/);
+      if (propMatch) {
+        queryPrefix = propMatch[1].toLowerCase();
+        matches = IS_CSS_PROPS.filter(item => item.label.startsWith(queryPrefix));
+      }
+    } else if (fileType === 'js') {
+      const jsMatch = currentLine.match(/(?:^|[\s.(])([a-zA-Z_$]{2,20})$/);
+      if (jsMatch) {
+        queryPrefix = jsMatch[1];
+        matches = IS_JS_KEYWORDS.filter(item => item.label.toLowerCase().startsWith(queryPrefix.toLowerCase()));
+      }
+    }
+
+    if (!matches.length) {
+      isPopup.classList.remove('visible');
+      return;
+    }
+
+    // Position popup directly underneath the active blinking cursor
+    const cursorEl = editorScroll.querySelector('.cursor');
+    if (!cursorEl) {
+      isPopup.classList.remove('visible');
+      return;
+    }
+
+    const rect = cursorEl.getBoundingClientRect();
+    const topPos = Math.min(window.innerHeight - 210, rect.bottom + 4);
+    const leftPos = Math.min(window.innerWidth * 0.45, Math.max(60, rect.left));
+
+    isPopup.style.top = topPos + 'px';
+    isPopup.style.left = leftPos + 'px';
+
+    const topItems = matches.slice(0, 7);
+    isPopup.innerHTML = topItems.map((item, idx) => {
+      const matchedPart = item.label.slice(0, queryPrefix.length);
+      const restPart = item.label.slice(queryPrefix.length);
+      const iconSym = item.kind === 'file' ? '📄' : (item.kind === 'tag' ? '<>' : (item.kind === 'kw' ? 'ƒ' : '🔧'));
+      return `
+        <div class="is-row ${idx === 0 ? 'selected' : ''}">
+          <div class="is-left">
+            <span class="is-icon ${item.kind}">${iconSym}</span>
+            <span><span class="is-match">${matchedPart}</span>${restPart}</span>
+          </div>
+          <span class="is-type">${item.type}</span>
+        </div>
+      `;
+    }).join('');
+
+    isPopup.classList.add('visible');
+  }
 
   const EDITOR_THEMES = {
     grey: { bg: '#1e1e1e', sidebar: '#252526', activity: '#333333', menubar: '#323233', tabInactive: '#2d2d2d', border: '#2b2b2b' },
@@ -1051,6 +1352,7 @@
   }
 
   function switchTabManually(type) {
+    isPopup.classList.remove('visible');
     setActiveTabUI(type);
     renderCodeLines(fileState[type], '', type, false);
   }
@@ -1180,10 +1482,12 @@
     if (showCursor) {
       const activeEl = editorScroll.querySelector('.active-line');
       if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+      updateIntelliSensePopup(beforeCursor, type);
+    } else {
+      isPopup.classList.remove('visible');
     }
   }
 
-  // FIXED: Uses srcdoc cleanly so Canvas & JS animations always render reliably without blocking
   function renderLiveStage(htmlStr, cssStr, jsStr) {
     let combined = htmlStr || '<!DOCTYPE html><html><head></head><body></body></html>';
     if (cssStr) {
@@ -1228,6 +1532,7 @@
 
     clearTimeout(timer);
     isTyping = true;
+    isPopup.classList.remove('visible');
     setActiveTabUI(stages[0].type);
     renderCodeLines('', '', stages[0].type, true);
     renderLiveStage('', '', '');
@@ -1292,6 +1597,7 @@
         timer = setTimeout(typeStep, Math.max(1, delay));
       } else {
         fileState[currentStage.type] = currentStage.content;
+        isPopup.classList.remove('visible');
         renderCodeLines(currentStage.content, '', currentStage.type, false);
 
         if (stageIdx + 1 < stages.length) {
@@ -1300,6 +1606,7 @@
           timer = setTimeout(typeStep, 650);
         } else {
           isTyping = false;
+          isPopup.classList.remove('visible');
           renderLiveStage(fileState.html, fileState.css, fileState.js);
         }
       }
@@ -1314,6 +1621,7 @@
     if (e.key === 'Escape') {
       clearTimeout(timer);
       isTyping = false;
+      isPopup.classList.remove('visible');
       mergeModal.classList.add('hidden');
       setupModal.classList.remove('hidden');
     }
