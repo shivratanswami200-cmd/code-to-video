@@ -27,11 +27,11 @@
             /* हल्का क्रीम-पिंक टिंटेड कार्ड */
             background: linear-gradient(145deg, rgba(255, 241, 242, 0.92), rgba(254, 249, 195, 0.88));
             backdrop-filter: blur(12px);
-            padding: 46px 36px;
+            padding: 44px 36px;
             border-radius: 26px;
             box-shadow: 0 20px 45px rgba(225, 29, 72, 0.14);
             text-align: center;
-            max-width: 820px;
+            max-width: 760px;
             width: 92%;
             border: 2px solid rgba(253, 164, 175, 0.6);
         }
@@ -59,13 +59,13 @@
         p.subtitle {
             color: #701a3c;
             font-size: 1.05rem;
-            margin-bottom: 36px;
+            margin-bottom: 34px;
             line-height: 1.5;
         }
 
         .button-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
 
@@ -75,7 +75,7 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            padding: 30px 18px;
+            padding: 28px 18px;
             border-radius: 20px;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
@@ -109,7 +109,7 @@
             box-shadow: 0 18px 36px rgba(225, 29, 72, 0.45);
         }
 
-        /* 3rd बटन स्टाइल: सेम थीम (पीच-गोल्ड से रोज़-पिंक ग्रेडिएंट) */
+        /* 3rd बटन स्टाइल: VS Code Studio */
         .btn-code {
             background: linear-gradient(135deg, #fed7aa 0%, #f9a8d4 100%);
             color: #881337;
@@ -123,8 +123,22 @@
             box-shadow: 0 18px 36px rgba(190, 18, 60, 0.32);
         }
 
+        /* 4th बटन स्टाइल: Pro Chrome + VS Code Studio */
+        .btn-pro {
+            background: linear-gradient(135deg, #fda4af 0%, #fef08a 100%);
+            color: #881337;
+            border: 2px solid #e11d48;
+            box-shadow: 0 10px 25px rgba(225, 29, 72, 0.25);
+        }
+
+        .btn-pro:hover {
+            transform: translateY(-6px);
+            border-color: #9f1239;
+            box-shadow: 0 18px 36px rgba(159, 18, 57, 0.35);
+        }
+
         .speed-tag {
-            font-size: 2.3rem;
+            font-size: 2.2rem;
             font-weight: 900;
             margin-bottom: 8px;
         }
@@ -137,7 +151,8 @@
             color: #fef08a;
         }
 
-        .btn-code .speed-tag {
+        .btn-code .speed-tag,
+        .btn-pro .speed-tag {
             color: #9f1239;
         }
 
@@ -153,7 +168,7 @@
             line-height: 1.4;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
             .button-grid {
                 grid-template-columns: 1fr;
             }
@@ -182,11 +197,18 @@
                 <span class="btn-desc">दोगुनी (2x) स्पीड पर फास्ट वीडियो आउटपुट और रिकॉर्डिंग</span>
             </a>
 
-            <!-- बटन 3: VS Code Auto-Typing Studio -->
+            <!-- बटन 3: VS Code Studio -->
             <a href="code-studio.html" class="mode-btn btn-code">
                 <span class="speed-tag">&lt;/&gt;</span>
                 <span class="btn-title">VS Code Studio</span>
                 <span class="btn-desc">ऑटो-टाइपिंग VS Code लेआउट और लाइव प्रीव्यू मर्ज टूल</span>
+            </a>
+
+            <!-- बटन 4: New Pro Chrome + VS Code Studio -->
+            <a href="pro-studio.html" class="mode-btn btn-pro">
+                <span class="speed-tag">PRO</span>
+                <span class="btn-title">Chrome + VS Code Studio</span>
+                <span class="btn-desc">ऑटो पिक्सेल-ट्वीकिंग, Chrome लाइव सर्वर और 3-डिवाइस व्यू</span>
             </a>
         </div>
     </div>
